@@ -1,4 +1,17 @@
 Things to do:
-1.
-2.
-3.
+1. Moving of cars - Jenny
+2. Moving of frog
+3. stop line one
+4. frog ride trees/vodorasli
+5. check last stop
+6. logo pring
+7. name of game print
+8. points iteration
+9. time iteration
+10. options (new game, send score, etc) //maybe sound of/on if there is
+11. read name of player
+12. print name+point in txt file
+13. live update of point and time
+14. colors and maybe background symbol forms?
+15. exception handling // like pressed ecs button and others
+16.* sound effects
