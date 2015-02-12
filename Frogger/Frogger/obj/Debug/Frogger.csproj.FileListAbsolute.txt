@@ -1,0 +1,6 @@
+D:\TERELIK\PROGRAMING\C# - PART II\Games\Frogger\Frogger\Frogger\bin\Debug\Frogger.exe.config
+D:\TERELIK\PROGRAMING\C# - PART II\Games\Frogger\Frogger\Frogger\obj\Debug\Frogger.csprojResolveAssemblyReference.cache
+D:\TERELIK\PROGRAMING\C# - PART II\Games\Frogger\Frogger\Frogger\bin\Debug\Frogger.exe
+D:\TERELIK\PROGRAMING\C# - PART II\Games\Frogger\Frogger\Frogger\bin\Debug\Frogger.pdb
+D:\TERELIK\PROGRAMING\C# - PART II\Games\Frogger\Frogger\Frogger\obj\Debug\Frogger.exe
+D:\TERELIK\PROGRAMING\C# - PART II\Games\Frogger\Frogger\Frogger\obj\Debug\Frogger.pdb
