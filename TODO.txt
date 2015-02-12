@@ -1,6 +1,6 @@
 Things to do:
 1. Moving of cars - Jenny
-2. Moving of frog
+2. Moving of frog - Marijana R (moving the frog up,down,left,right inside the boundaries of buffer height and width)
 3. stop line one
 4. frog ride trees/vodorasli
 5. check last stop
