@@ -38,7 +38,7 @@ namespace Frogger
             for (int i = 0; i < trucks.Count; i++)
             {
                 PrintVehicles(trucks[i].x, trucks[i].y, trucks[i].color, trucks[i].speed, trucks[i].ch);
-                trucks[i] = Temp(trucks[i], i, '-');
+                trucks[i] = Temp(trucks[i], i, '-', trucks[i].speed);
                 if (i == 0)
                 {
                     xOfTruckOne = trucks[i].x;
@@ -55,7 +55,7 @@ namespace Frogger
             for (int i = 0; i < carTwo.Count; i++)
             {
                 PrintVehiclesRight(carTwo[i].x, carTwo[i].y, carTwo[i].color, carTwo[i].speed, carTwo[i].ch);
-                carTwo[i] = Temp(carTwo[i], i, '+');
+                carTwo[i] = Temp(carTwo[i], i, '+', carTwo[i].speed);
                 if (i == 0)
                 {
                     xOfCarTwo = carTwo[i].x;
@@ -67,7 +67,7 @@ namespace Frogger
             for (int i = 0; i < carThree.Count; i++)
             {
                 PrintVehicles(carThree[i].x, carThree[i].y, carThree[i].color, carThree[i].speed, carThree[i].ch);
-                carThree[i] = Temp(carThree[i], i, '-');
+                carThree[i] = Temp(carThree[i], i, '-', carThree[i].speed);
                 if (i == 0)
                 {
                     xOfcarThree = carThree[i].x;
@@ -80,7 +80,7 @@ namespace Frogger
             for (int i = 0; i < carFour.Count; i++)
             {
                 PrintVehiclesRight(carFour[i].x, carFour[i].y, carFour[i].color, carFour[i].speed, carFour[i].ch);
-                carFour[i] = Temp(carFour[i], i, '+');
+                carFour[i] = Temp(carFour[i], i, '+', carFour[i].speed);
                 if (i == 0)
                 {
                     xOfcarFour = carFour[i].x;
@@ -92,7 +92,7 @@ namespace Frogger
             for (int i = 0; i < carFive.Count; i++)
             {
                 PrintVehicles(carFive[i].x, carFive[i].y, carFive[i].color, carFive[i].speed, carFive[i].ch);
-                carFive[i] = Temp(carFive[i], i, '-');
+                carFive[i] = Temp(carFive[i], i, '-', carFive[i].speed);
                 if (i == 0)
                 {
                     xOfcarFive = carFive[i].x;
@@ -141,12 +141,12 @@ namespace Frogger
             }
         }
 
-        private static Vehicle Temp(Vehicle item, int i, char ch)
+        private static Vehicle Temp(Vehicle item, int i, char ch, int speed)
         {
             Vehicle temp = item;
             if (ch == '-')
             {
-                temp.x = item.x - 1;
+                temp.x = item.x - speed;
                 if (temp.x < 0)
                 {
                     temp.x = width - 1;
@@ -154,7 +154,7 @@ namespace Frogger
             }
             else
             {
-                temp.x = item.x + 1;
+                temp.x = item.x + speed;
                 if (temp.x >= width)
                 {
                     temp.x = 0;
@@ -206,66 +206,70 @@ namespace Frogger
 
             #endregion
 
+            Vehicle temp1 = new Vehicle();
+            Vehicle temp2 = new Vehicle();
+            Vehicle temp3 = new Vehicle();
+
             #region Inicialize Trucks
             List<Vehicle> trucks = new List<Vehicle>();
 
-            Vehicle truckOne = new Vehicle();
-            truckOne.x = xOfTruckOne;
-            truckOne.y = y;
-            truckOne.ch = vehicles[0];
-            truckOne.color = ConsoleColor.Yellow;
-            truckOne.speed = 20;
-            trucks.Add(truckOne);
+            temp1 = new Vehicle();
+            temp1.x = xOfTruckOne;
+            temp1.y = y;
+            temp1.ch = vehicles[0];
+            temp1.color = ConsoleColor.Yellow;
+            temp1.speed = 2;
+            trucks.Add(temp1);
 
-            Vehicle truckTwo = new Vehicle();
-            truckTwo.x = xOfTruckOne + 15;
-            truckTwo.y = truckOne.y;
-            truckTwo.ch = truckOne.ch;
-            truckTwo.speed = truckOne.speed;
-            truckTwo.color = ConsoleColor.Red;
-            trucks.Add(truckTwo);
+            temp2 = new Vehicle();
+            temp2.x = xOfTruckOne + 15;
+            temp2.y = temp1.y;
+            temp2.ch = temp1.ch;
+            temp2.speed = temp1.speed;
+            temp2.color = ConsoleColor.Red;
+            trucks.Add(temp2);
             #endregion
 
             #region Inicialize CarTwo
             List<Vehicle> carTwo = new List<Vehicle>();
 
-            Vehicle tempOne = new Vehicle();
-            tempOne.x = xOfCarTwo;
-            tempOne.y = y + 3;
-            tempOne.ch = vehicles[1];
-            tempOne.color = ConsoleColor.Green;
-            tempOne.speed = 20;
-            carTwo.Add(tempOne);
+            temp1 = new Vehicle();
+            temp1.x = xOfCarTwo;
+            temp1.y = y + 3;
+            temp1.ch = vehicles[1];
+            temp1.color = ConsoleColor.Green;
+            temp1.speed = 2;
+            carTwo.Add(temp1);
 
-            Vehicle tempTwo = new Vehicle();
-            tempTwo.x = xOfCarTwo - 10;
-            tempTwo.y = tempOne.y;
-            tempTwo.ch = tempOne.ch;
-            tempTwo.color = ConsoleColor.DarkMagenta;
-            tempTwo.speed = tempOne.speed;
-            carTwo.Add(tempTwo);
+            temp2 = new Vehicle();
+            temp2.x = xOfCarTwo - 10;
+            temp2.y = temp1.y;
+            temp2.ch = temp1.ch;
+            temp2.color = ConsoleColor.DarkMagenta;
+            temp2.speed = temp1.speed;
+            carTwo.Add(temp2);
 
-            Vehicle tempThree = new Vehicle();
-            tempThree.x = xOfCarTwo - 20;
-            tempThree.y = tempOne.y;
-            tempThree.ch = tempOne.ch;
-            tempThree.color = ConsoleColor.DarkCyan;
-            tempThree.speed = tempOne.speed;
-            carTwo.Add(tempThree);
+            temp3 = new Vehicle();
+            temp3.x = xOfCarTwo - 20;
+            temp3.y = temp1.y;
+            temp3.ch = temp1.ch;
+            temp3.color = ConsoleColor.DarkCyan;
+            temp3.speed = temp1.speed;
+            carTwo.Add(temp3);
             #endregion
 
             #region Inicialize CarThree
             List<Vehicle> carThree = new List<Vehicle>();
 
-            Vehicle temp1 = new Vehicle();
+            temp1 = new Vehicle();
             temp1.x = xOfcarThree;
             temp1.y = y + 6;
             temp1.ch = vehicles[2];
             temp1.color = ConsoleColor.DarkBlue;
-            temp1.speed = 20;
+            temp1.speed = 2;
             carThree.Add(temp1);
 
-            Vehicle temp2 = new Vehicle();
+            temp2 = new Vehicle();
             temp2.x = xOfcarThree + 10;
             temp2.y = temp1.y;
             temp2.ch = temp1.ch;
@@ -273,7 +277,7 @@ namespace Frogger
             temp2.speed = temp1.speed;
             carThree.Add(temp2);
 
-            Vehicle temp3 = new Vehicle();
+            temp3 = new Vehicle();
             temp3.x = xOfcarThree + 20;
             temp3.y = temp1.y;
             temp3.ch = temp1.ch;
@@ -281,61 +285,61 @@ namespace Frogger
             temp3.speed = temp1.speed;
             carThree.Add(temp3);
             #endregion
-
+            
             #region Inicialize CarFour
             List<Vehicle> carFour = new List<Vehicle>();
 
-            Vehicle temp11 = new Vehicle();
-            temp11.x = xOfcarFour;
-            temp11.y = y + 9;
-            temp11.ch = vehicles[3];
-            temp11.color = ConsoleColor.Blue;
-            temp11.speed = 20;
-            carFour.Add(temp11);
+            temp1 = new Vehicle();
+            temp1.x = xOfcarFour;
+            temp1.y = y + 9;
+            temp1.ch = vehicles[3];
+            temp1.color = ConsoleColor.Blue;
+            temp1.speed = 2;
+            carFour.Add(temp1);
 
-            Vehicle temp22 = new Vehicle();
-            temp22.x = xOfcarFour - 10;
-            temp22.y = temp11.y;
-            temp22.ch = temp11.ch;
-            temp22.color = ConsoleColor.DarkRed;
-            temp22.speed = temp11.speed;
-            carFour.Add(temp22);
+            temp2 = new Vehicle();
+            temp2.x = xOfcarFour - 10;
+            temp2.y = temp1.y;
+            temp2.ch = temp1.ch;
+            temp2.color = ConsoleColor.DarkRed;
+            temp2.speed = temp1.speed;
+            carFour.Add(temp2);
 
-            Vehicle temp33 = new Vehicle();
-            temp33.x = xOfcarFour - 20;
-            temp33.y = temp11.y;
-            temp33.ch = temp11.ch;
-            temp33.color = ConsoleColor.Gray;
-            temp33.speed = temp11.speed;
-            carFour.Add(temp33);
+            temp3 = new Vehicle();
+            temp3.x = xOfcarFour - 20;
+            temp3.y = temp1.y;
+            temp3.ch = temp1.ch;
+            temp3.color = ConsoleColor.Gray;
+            temp3.speed = temp1.speed;
+            carFour.Add(temp3);
             #endregion
 
             #region Inicialize CarFive
             List<Vehicle> carFive = new List<Vehicle>();
 
-            Vehicle tempf1 = new Vehicle();
-            tempf1.x = xOfcarFive;
-            tempf1.y = y + 12;
-            tempf1.ch = vehicles[4];
-            tempf1.color = ConsoleColor.Magenta;
-            tempf1.speed = 20;
-            carFive.Add(tempf1);
+            temp1 = new Vehicle();
+            temp1.x = xOfcarFive;
+            temp1.y = y + 12;
+            temp1.ch = vehicles[4];
+            temp1.color = ConsoleColor.Magenta;
+            temp1.speed = 1;
+            carFive.Add(temp1);
 
-            Vehicle tempf2 = new Vehicle();
-            tempf2.x = xOfcarFive + 10;
-            tempf2.y = tempf1.y;
-            tempf2.ch = tempf1.ch;
-            tempf2.color = ConsoleColor.Green;
-            tempf2.speed = tempf1.speed;
-            carFive.Add(tempf2);
+            temp2 = new Vehicle();
+            temp2.x = xOfcarFive + 10;
+            temp2.y = temp1.y;
+            temp2.ch = temp1.ch;
+            temp2.color = ConsoleColor.Green;
+            temp2.speed = temp1.speed;
+            carFive.Add(temp2);
 
-            Vehicle tempf3 = new Vehicle();
-            tempf3.x = xOfcarFive + 20;
-            tempf3.y = tempf1.y;
-            tempf3.ch = tempf1.ch;
-            tempf3.color = ConsoleColor.Cyan;
-            tempf3.speed = tempf1.speed;
-            carFive.Add(tempf3);
+            temp3 = new Vehicle();
+            temp3.x = xOfcarFive + 20;
+            temp3.y = temp1.y;
+            temp3.ch = temp1.ch;
+            temp3.color = ConsoleColor.Cyan;
+            temp3.speed = temp1.speed;
+            carFive.Add(temp3);
             #endregion
             
             #endregion
@@ -357,9 +361,9 @@ namespace Frogger
                 //exception handling
                 //~sound effects
 
-                
 
-                Thread.Sleep(100);
+
+                Thread.Sleep(200);
             }
         }
 
