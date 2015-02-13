@@ -3,6 +3,7 @@ Assignment for the team work of C# 2 course in Telerik Academy.
 
 <b>Things to do:</b><br>
 1. <s>Moving of cars</s> - Jenny<br>
+2. + мoving of trees and turtles - jenny<br>
 2. Moving of frog - Marijana R (moving the frog up,down,left,right inside the boundaries of buffer height and width)<br>
 3. stop line one<br>
 4. frog ride trees/vodorasli<br>
