@@ -9,10 +9,10 @@ Assignment for the team work of C# 2 course in Telerik Academy.
 4. frog ride trees/vodorasli<br>
 5. check last stop<br>
 6. <s>logo print</s> - Galina<br>
-7. name of game print<br>
+7. <s>name of game print</s> - Galina<br>
 8. points iteration<br>
 9. time iteration<br>
-10. options (new game, send score, etc) //maybe sound of/on if there is<br>
+10. options (new game, send score, etc) //maybe sound of/on if there is - Galina<br>
 11. read name of player<br>
 12. print name+point in txt file<br>
 13. live update of point and time<br>
