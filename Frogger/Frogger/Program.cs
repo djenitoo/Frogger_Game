@@ -29,6 +29,31 @@ namespace Frogger
 
         }
 
+        private static void PrintLogo()
+        {
+            string shift = "    ";
+            Console.WriteLine(shift + "       ___ __ ");
+            Console.WriteLine(shift + "     _{___{__}\\");
+            Console.WriteLine(shift + "   {_}      `\\)");
+            Console.WriteLine(shift + "  {_}        `            _.-''''--.._");
+            Console.WriteLine(shift + "  {_}                    //'.--.  \\___`.");
+            Console.WriteLine(shift + "   { }__,_.--~~~-~~~-~~-::.---. `-.\\  `.)");
+            Console.WriteLine(shift + "    `-.{_{_{_{_{_{_{_{_//  -- 8;=- `");
+            Console.WriteLine(shift + "     `-:,_.:,_:,_:,.`\\._ ..'=- , ");
+            Console.WriteLine(shift + "         // // // //`-.`\\`   .-'/");
+            Console.WriteLine(shift + "        << << << <<    \\ `--'  /----)");
+            Console.WriteLine(shift + "         ^  ^  ^  ^     `-.....--'''");
+
+            Console.WriteLine("      ____                  _ ");
+            Console.WriteLine("     / __/______  _______  (_)__  ___  ___ ____");
+            Console.WriteLine("    _\\ \\/ __/ _ \\/ __/ _ \\/ / _ \\/ _ \\/ -_) __/");
+            Console.WriteLine("   /___/\\__/\\___/_/ / .__/_/\\___/_//_/\\__/_/");
+            Console.WriteLine("                   /_/");
+
+            Thread.Sleep(1000);
+            Console.Clear();
+        }
+
         private static void DrawCars(List<Vehicle> trucks, List<Vehicle> carTwo, List<Vehicle> carThree, List<Vehicle> carFour, List<Vehicle> carFive)
         {
 

@@ -1,4 +1,4 @@
-# Frogger_Game
+﻿# Frogger_Game
 Assignment for the team work of C# 2 course in Telerik Academy.
 
 <b>Things to do:</b><br>
@@ -8,7 +8,7 @@ Assignment for the team work of C# 2 course in Telerik Academy.
 3. stop line one<br>
 4. frog ride trees/vodorasli<br>
 5. check last stop<br>
-6. logo pring<br>
+6. <s>logo print</s> - Galina<br>
 7. name of game print<br>
 8. points iteration<br>
 9. time iteration<br>
