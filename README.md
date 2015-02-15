@@ -16,7 +16,7 @@ Assignment for the team work of C# 2 course in Telerik Academy.
 13. live update of point and time<br>
 14. colors and maybe background symbol forms?<br>
 15. exception handling // like pressed ecs button and others<br>
-16. Some bonuses for the points (see flash game link)</br>
+16. Some bonuses for the points (see flash game link)<br>
 17.* sound effects<br>
 <br><br>
 Link to the flash game - http://www.bigmoneyarcade.com/games/frogger <br>
