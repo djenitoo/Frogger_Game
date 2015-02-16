@@ -192,6 +192,7 @@ namespace Frogger
                 Console.WriteLine("Press [enter] to go BACK");
                 Console.ReadLine();
                 Console.Clear();
+                PrintName();
                 MainMenu();
             }
         }
