@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -29,29 +30,170 @@ namespace Frogger
 
         }
 
+        private static string[] logo = 
+            {
+                "     ___ __                            ",
+                "   _{___{__}\\                          ",
+                " {_}      `\\)                          ",
+                "{_}        `            _.-''''--.._   ",
+                "{_}                    //'.--.  \\___`. ",
+                " { }__,_.--~~~-~~~-~~-::.---. `-.\\  `.)",
+                "  `-.{_{_{_{_{_{_{_{_//  -- 8;=- `     ",
+                "   `-:,_.:,_:,_:,.`\\._ ..'=- ,         ",
+                "       // // // //`-.`\\`   .-'/        ",
+                "      << << << <<    \\ `--'  /----)    ",
+                "       ^  ^  ^  ^     `-.....--'''     ",
+            };
+
+        private static string[] title = 
+        {
+            "   ____                  _                  ",
+            "  / __/______  _______  (_)__  ___  ___ ____",
+            " _\\ \\/ __/ _ \\/ __/ _ \\/ / _ \\/ _ \\/ -_) __/",
+            "/___/\\__/\\___/_/ / .__/_/\\___/_//_/\\__/_/   ",
+            "                /_/                         ",
+        };
+        private const ConsoleColor TITLE_COLOR = ConsoleColor.White;
+        private const ConsoleColor LOGO_COLOR = ConsoleColor.Red;
+        private static void PrintName()
+        {
+            Console.ForegroundColor = TITLE_COLOR;
+
+            if (title[0].Length <= Console.WindowWidth)
+            {
+                foreach (var str in title)
+                {
+                    Console.WriteLine(new string(' ', ((Console.WindowWidth - title[0].Length) / 2)) + str);
+                }
+
+            }
+        }
         private static void PrintLogo()
         {
-            string shift = "    ";
-            Console.WriteLine(shift + "       ___ __ ");
-            Console.WriteLine(shift + "     _{___{__}\\");
-            Console.WriteLine(shift + "   {_}      `\\)");
-            Console.WriteLine(shift + "  {_}        `            _.-''''--.._");
-            Console.WriteLine(shift + "  {_}                    //'.--.  \\___`.");
-            Console.WriteLine(shift + "   { }__,_.--~~~-~~~-~~-::.---. `-.\\  `.)");
-            Console.WriteLine(shift + "    `-.{_{_{_{_{_{_{_{_//  -- 8;=- `");
-            Console.WriteLine(shift + "     `-:,_.:,_:,_:,.`\\._ ..'=- , ");
-            Console.WriteLine(shift + "         // // // //`-.`\\`   .-'/");
-            Console.WriteLine(shift + "        << << << <<    \\ `--'  /----)");
-            Console.WriteLine(shift + "         ^  ^  ^  ^     `-.....--'''");
+            Console.ForegroundColor = LOGO_COLOR;
 
-            Console.WriteLine("      ____                  _ ");
-            Console.WriteLine("     / __/______  _______  (_)__  ___  ___ ____");
-            Console.WriteLine("    _\\ \\/ __/ _ \\/ __/ _ \\/ / _ \\/ _ \\/ -_) __/");
-            Console.WriteLine("   /___/\\__/\\___/_/ / .__/_/\\___/_//_/\\__/_/");
-            Console.WriteLine("                   /_/");
 
-            Thread.Sleep(1000);
-            Console.Clear();
+            for (int col = 0; col <= logo[0].Length + ((Console.WindowWidth - logo[0].Length) / 2); col++)
+            {
+                Console.Clear();
+                foreach (var str in logo)
+                {
+                    if (col < logo[0].Length)
+                    {
+                        Console.WriteLine(str.Substring(logo[0].Length - col - 1));
+                    }
+                    else
+                    {
+                        Console.WriteLine(new string(' ', col - logo[0].Length) + str);
+                    }
+                }
+                Thread.Sleep(25);
+            }
+        }
+
+        private static void hideLogo()
+        {
+            for (int row = 1; row <= logo.Length; row++)
+            {
+                Console.Clear();
+                Console.ForegroundColor = LOGO_COLOR;
+                for (int row2 = row; row2 < logo.Length; row2++)
+                {
+                    Console.WriteLine(new string(' ', ((Console.WindowWidth - title[0].Length) / 2)) + logo[row2]);
+                }
+                Console.ForegroundColor = TITLE_COLOR;
+                foreach (var str in title)
+                {
+                    Console.WriteLine(new string(' ', ((Console.WindowWidth - title[0].Length) / 2)) + str);
+                }
+                Thread.Sleep(25);
+            }
+        }
+
+        private static void MainMenu()
+        {
+            Console.WriteLine("\n\n");
+            Console.SetCursorPosition(20, 9);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("MAIN MENU:\n");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\tNEW Game - press [1]\n");
+            Console.WriteLine("\tHigh SCORES - press [2]\n");
+            Console.WriteLine("\tPoint Table - press [3]\n\n\n");
+
+            int inputChoice = int.Parse(Console.ReadLine());
+            if (inputChoice == 1)
+            {
+                //TODO - logic for starting the game
+            }
+            else if (inputChoice == 2)
+            {
+                //TODO - read file with player score and sort it decreasing
+                try
+                {
+                    StreamReader readHighScores = new StreamReader(@"..\..\HighScores.txt");
+                    using (readHighScores)
+                    {
+                        PrintName();
+                        Console.SetCursorPosition(17, 9);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("- HIGH SCORES -\n");
+
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        string highScores = readHighScores.ReadToEnd();
+                        int[] scores = highScores.Split(' ').Select(int.Parse).ToArray(); // sync by what to Split
+                        Array.Sort(scores);
+                        foreach (var score in scores)
+                        {
+                            Console.WriteLine(score);
+                        }
+
+                        //int lineNumber = 0;
+                        //string line = readHighScores.ReadLine();
+                        //while (line != null)
+                        //{
+                        //    lineNumber++;
+                        //    Console.WriteLine("{0}",line);
+                        //    line = readHighScores.ReadLine();
+                        //}
+
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    Console.Error.WriteLine("Cannot find 'HighScores.txt'.");
+                }
+            }
+            else if (inputChoice == 3)
+            {
+                // print table with ponts / instructions
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\n\n");
+                PrintName();
+                Console.SetCursorPosition(17, 9);
+                Console.WriteLine("- POINT TABLE -\n");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\t10 PTS FOR EACH STEP\n\n" +
+                    "\t50 PTS FOR EVERY SCORPION");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\tARRIVED HOME SAFELY\n");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\t1000 PTS FOR SAVING SCOTPIONS");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\tINTO FIVE HOMES\n");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\tPLUS BONUS");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\t10 PTS X REMAINING SECOND\n\n");
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("Press [enter] to go BACK");
+                Console.ReadLine();
+                Console.Clear();
+                MainMenu();
+            }
         }
 
         private static void DrawCars(List<Vehicle> trucks, List<Vehicle> carTwo, List<Vehicle> carThree, List<Vehicle> carFour, List<Vehicle> carFive)
@@ -194,6 +336,13 @@ namespace Frogger
         static void Main(string[] args)
         {
             CustomizeConsole();
+
+            PrintLogo();
+            PrintName();
+
+            Thread.Sleep(1000);
+            hideLogo();
+            MainMenu();
 
             #region Inicialize Vehicles
 
