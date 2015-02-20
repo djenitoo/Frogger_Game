@@ -11,25 +11,23 @@ namespace Frogger
 
     class Program
     {
-        static int width = 50;
+        static int width = 70;
+        static int height = 55;
         public int points = 0;
         public int time = 0;
-        static int y = 15;
+        static int y = 25;
+        static int showHide = 0;
         static int xOfTruckOne = width - 1;
         static int xOfcarThree = width - 10;
         static int xOfcarFour = 10;
         static int xOfCarTwo = width / 2 + 5;
         static int xOfcarFive = width - 5;
-
-        private static void CustomizeConsole()
-        {
-            Console.BufferWidth = Console.WindowWidth = width;
-            Console.BufferHeight = Console.WindowHeight;
-            Console.OutputEncoding = Encoding.Unicode;
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
-
-        }
-
+        static int xOfTreeOne = 10;
+        static int yOfTree = 17;
+        static int xOfTreeTwo = 20;
+        private const ConsoleColor TITLE_COLOR = ConsoleColor.White;
+        private const ConsoleColor LOGO_COLOR = ConsoleColor.Red;
+        #region Logos
         private static string[] logo = 
             {
                 "     ___ __                            ",
@@ -53,8 +51,21 @@ namespace Frogger
             "/___/\\__/\\___/_/ / .__/_/\\___/_//_/\\__/_/   ",
             "                /_/                         ",
         };
-        private const ConsoleColor TITLE_COLOR = ConsoleColor.White;
-        private const ConsoleColor LOGO_COLOR = ConsoleColor.Red;
+        #endregion
+        static char[,] turtle2 = {  {'*','*',' ','*','*',' ','*','*'},
+                                    {'*','*',' ','*','*',' ','*','*'} };
+        
+        private static void CustomizeConsole()
+        {
+            Console.BufferWidth = Console.WindowWidth = width;
+            Console.BufferHeight = Console.WindowHeight = height;
+            Console.OutputEncoding = Encoding.Unicode;
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            Console.CursorVisible = false;
+            Console.Title = "Scorpioner";
+
+        }
+
         private static void PrintName()
         {
             Console.ForegroundColor = TITLE_COLOR;
@@ -68,6 +79,7 @@ namespace Frogger
 
             }
         }
+
         private static void PrintLogo()
         {
             Console.ForegroundColor = LOGO_COLOR;
@@ -122,6 +134,7 @@ namespace Frogger
             Console.WriteLine("\tHigh SCORES - press [2]\n");
             Console.WriteLine("\tPoint Table - press [3]\n\n\n");
 
+            #region Process Input
             int inputChoice = int.Parse(Console.ReadLine());
             if (inputChoice == 1)
             {
@@ -194,7 +207,8 @@ namespace Frogger
                 Console.Clear();
                 PrintName();
                 MainMenu();
-            }
+            } 
+            #endregion
         }
 
         private static void DrawCars(List<Vehicle> trucks, List<Vehicle> carTwo, List<Vehicle> carThree, List<Vehicle> carFour, List<Vehicle> carFive)
@@ -332,52 +346,132 @@ namespace Frogger
             return temp;
         }
 
+        private static void DrawTrees(List<Trees> TreesOne, List<Trees> Turtles)
+        {
+            #region MoveTrees
+            for (int i = 0; i < TreesOne.Count; i++)
+            {
+                PrintVehiclesRight(TreesOne[i].x, TreesOne[i].y, TreesOne[i].color, TreesOne[i].speed, TreesOne[i].arr);
+                TreesOne[i] = Temp(TreesOne[i], i, '+', TreesOne[i].speed);
+                if (i == 0)
+                {
+                    xOfTreeOne = TreesOne[i].x;
+                }
+            }
+            #endregion
 
+
+            #region MoveTurtles
+            for (int i = 0; i < Turtles.Count; i++)
+            {
+                char[,] tempCharArr = new char[2, 8];
+
+                if (i == 5 || i == 2)
+                {
+                    if (showHide == 5 || showHide == 6 || showHide == 7)
+                    {
+                        showHide = (showHide + 1) % 8;
+                        tempCharArr = Turtles[i].arr;
+                        //continue;
+                    }
+                    else if (showHide >= 1 && showHide <= 4)
+                    {
+                        tempCharArr = turtle2;
+                        showHide = (showHide + 1) % 8;
+                    }
+                    else if (showHide == 0)
+                    {
+                        showHide = (showHide + 1) % 8;
+                    }
+                }
+                else
+                {
+                    tempCharArr = Turtles[i].arr;
+                }
+
+                PrintVehicles(Turtles[i].x, Turtles[i].y, Turtles[i].color, Turtles[i].speed, tempCharArr);
+                Turtles[i] = Temp(Turtles[i], i, '-', Turtles[i].speed);
+                if (i == 0)
+                {
+                    xOfTreeOne = Turtles[i].x;
+                }
+            }
+            #endregion
+        }
+
+        private static Trees Temp(Trees item, int i, char ch, int speed)
+        {
+            Trees temp = item;
+            if (ch == '-')
+            {
+                temp.x = item.x - speed;
+                if (temp.x < 0)
+                {
+                    temp.x = width - 1;
+                }
+            }
+            else
+            {
+                temp.x = item.x + speed;
+                if (temp.x >= width)
+                {
+                    temp.x = 0;
+                }
+            }
+
+            return temp;
+        }
+
+
+        // M   A   I   N
 
         static void Main(string[] args)
         {
-            CustomizeConsole();
+            #region Inicialize Moving Objects(Cars,Trees, etc.)
 
-            PrintLogo();
-            PrintName();
-
-            Thread.Sleep(1000);
-            hideLogo();
-            MainMenu();
-
-            #region Inicialize Vehicles
-
-            #region Vehicles List of Forms
+            #region List of Moving Forms
             List<char[,]> vehicles = new List<char[,]>();
             char[,] cha1 = {
-                            {'\u258C', '\u2588', '\u2588', '\u2588', '\u2588'}, 
-                            {'\u258C', '\u2588', '\u2588', '\u2588', '\u2588'}
+                            {'┌', '█', '█', '█', '█'}, 
+                            {'▀', 'O', '▀', 'O', '▀'}
                          };
             vehicles.Add(cha1);
 
             char[,] cha2 = {
-                            {'\u2592', '\u2592', '\u2580'}, 
-                            {'\u2592', '\u2592', '\u2584'}
+                            {'▒','▒','▒', '▒', '╖'}, 
+                            {'▀','#','▀', '#', '▀'}
                           };
             vehicles.Add(cha2);
 
             char[,] cha3 = {
-                        {'\u258C', '\u2593', '\u2592'}, 
-                        {'\u258C', '\u2593', '\u2592'}
+                        {' ', '╔','╤', '╤','╤', '╗'}, 
+                        {'▀', '@','▀', '▀','@', '▀'}
                   };
             vehicles.Add(cha3);
 
             char[,] cha4 = {
-                            {'\u2588', '\u2588', '\u2584'}, 
-                            {'\u2588', '\u2588', '\u2580'}
+                            {'█','█', '█','█','╗', ' '}, 
+                            {'▀','0', '▀','0','▀', ' '}
                           };
             vehicles.Add(cha4);
 
             char[,] cha5 = {
-                        {'\u2584', '\u2590', '\u2591', '\u2591'}, 
-                        {'\u2580', '\u2590', '\u2591', '\u2591'}
+                        {' ', '╓', '─', '╖'},
+                        {'▀', '@', '▀', '@'}
                   };
             vehicles.Add(cha5);
+
+            char[,] charrie = { {'╓','─','┬','─','┬','─','╖'},
+                                {'╙','─','┴','─','┴','─','╜'}};
+
+            char[,] charrie3 = { {'╔','#','#','#','#','#','#','#','#','#','#','#','#', '╗'},
+                                 {'╚','#','#','#','#','#','#','#','#','#','#','#','#', '╝'}};
+
+            char[,] charrie2 = { {'┌','#','#','#','#','#','#','#','#','#','┐'},
+                                 {'└','#','#','#','#','#','#','#','#','#','┘'}};
+
+            char[,] turtle1 = { {'@','@',' ','@','@',' ','@','@'},
+                                {'@','@',' ','@','@',' ','@','@'} };
 
             #endregion
 
@@ -460,7 +554,7 @@ namespace Frogger
             temp3.speed = temp1.speed;
             carThree.Add(temp3);
             #endregion
-            
+
             #region Inicialize CarFour
             List<Vehicle> carFour = new List<Vehicle>();
 
@@ -516,17 +610,202 @@ namespace Frogger
             temp3.speed = temp1.speed;
             carFive.Add(temp3);
             #endregion
-            
+
+            #region Trees Inicialize
+            Trees tempA = new Trees();
+            Trees tempB = new Trees();
+            Trees tempC = new Trees();
+
+            List<Trees> TreesOne = new List<Trees>();
+
+            #region One
+            // O N E
+            tempA.x = xOfTreeOne;
+            tempA.y = yOfTree;
+            tempA.color = ConsoleColor.DarkRed;
+            tempA.arr = charrie;
+            tempA.speed = 2;
+            TreesOne.Add(tempA);
+
+            tempB.x = tempA.x - 10;
+            tempB.y = tempA.y;
+            tempB.color = tempA.color;
+            tempB.arr = tempA.arr;
+            tempB.speed = tempA.speed;
+            TreesOne.Add(tempB);
+
+            tempC.x = tempA.x - 25;
+            tempC.y = tempA.y;
+            tempC.color = tempA.color;
+            tempC.arr = tempA.arr;
+            tempC.speed = tempA.speed;
+            TreesOne.Add(tempC);
+
+            tempC = new Trees();
+            tempC.x = tempA.x - 35;
+            tempC.y = tempA.y;
+            tempC.color = tempA.color;
+            tempC.arr = tempA.arr;
+            tempC.speed = tempA.speed;
+            TreesOne.Add(tempC);
+
+            tempC = new Trees();
+            tempC.x = tempA.x - 50;
+            tempC.y = tempA.y;
+            tempC.color = tempA.color;
+            tempC.arr = tempA.arr;
+            tempC.speed = tempA.speed;
+            TreesOne.Add(tempC);
             #endregion
+
+            #region Two
+            // T   W   O 
+            tempA = new Trees();
+            tempB = new Trees();
+            tempC = new Trees();
+
+            tempA.x = xOfTreeTwo;
+            tempA.y = yOfTree - 3;
+            tempA.color = ConsoleColor.DarkYellow;
+            tempA.arr = charrie2;
+            tempA.speed = 1;
+            TreesOne.Add(tempA);
+
+            tempB.x = tempA.x - 15;
+            tempB.y = tempA.y;
+            tempB.color = tempA.color;
+            tempB.arr = tempA.arr;
+            tempB.speed = tempA.speed;
+            TreesOne.Add(tempB);
+
+            tempC.x = tempA.x - 29;
+            tempC.y = tempA.y;
+            tempC.color = tempA.color;
+            tempC.arr = tempA.arr;
+            tempC.speed = tempA.speed;
+            TreesOne.Add(tempC);
+
+            tempC = new Trees();
+            tempC.x = tempA.x + 14;
+            tempC.y = tempA.y;
+            tempC.color = tempA.color;
+            tempC.arr = tempA.arr;
+            tempC.speed = tempA.speed;
+            TreesOne.Add(tempC);
+            #endregion
+
+            #region Three
+            // T H R E E
+            tempA = new Trees();
+            tempB = new Trees();
+            tempC = new Trees();
+
+            tempA.x = xOfTreeTwo;
+            tempA.y = yOfTree - 9;
+            tempA.color = ConsoleColor.DarkGreen;
+            tempA.arr = charrie3;
+            tempA.speed = 2;
+            TreesOne.Add(tempA);
+
+            tempB.x = tempA.x - 20;
+            tempB.y = tempA.y;
+            tempB.color = tempA.color;
+            tempB.arr = tempA.arr;
+            tempB.speed = tempA.speed;
+            TreesOne.Add(tempB);
+
+            tempB = new Trees();
+            tempB.x = tempA.x - 40;
+            tempB.y = tempA.y;
+            tempB.color = tempA.color;
+            tempB.arr = tempA.arr;
+            tempB.speed = tempA.speed;
+            TreesOne.Add(tempB);
+            #endregion
+
+            #endregion
+
+            #region Turtles
+            List<Trees> Turtles = new List<Trees>();
+
+            #region One
+            tempA = new Trees();
+            tempB = new Trees();
+            tempC = new Trees();
+
+            tempA.x = xOfTreeOne + 10;
+            tempA.y = yOfTree + 3;
+            tempA.color = ConsoleColor.Red;
+            tempA.speed = 2;
+            tempA.arr = turtle1;
+            Turtles.Add(tempA);
+
+            tempB.x = tempA.x + 20;
+            tempB.y = tempA.y;
+            tempB.color = tempA.color;
+            tempB.speed = tempA.speed;
+            tempB.arr = tempA.arr;
+            Turtles.Add(tempB);
+
+            tempC.x = tempA.x + 40;
+            tempC.y = tempA.y;
+            tempC.color = tempA.color;
+            tempC.speed = tempA.speed;
+            tempC.arr = tempA.arr;
+            Turtles.Add(tempC);
+            #endregion
+
+            #region Two
+            tempA = new Trees();
+            tempB = new Trees();
+            tempC = new Trees();
+
+            tempA.x = xOfTreeOne;
+            tempA.y = yOfTree - 6;
+            tempA.color = ConsoleColor.Red;
+            tempA.speed = 2;
+            tempA.arr = turtle1;
+            Turtles.Add(tempA);
+
+            tempB.x = tempA.x + 20;
+            tempB.y = tempA.y;
+            tempB.color = tempA.color;
+            tempB.speed = tempA.speed;
+            tempB.arr = tempA.arr;
+            Turtles.Add(tempB);
+
+            tempC.x = tempA.x + 40;
+            tempC.y = tempA.y;
+            tempC.color = tempA.color;
+            tempC.speed = tempA.speed;
+            tempC.arr = tempA.arr;
+            Turtles.Add(tempC);
+            #endregion
+
+            #endregion
+
+            #endregion
+
+
+            CustomizeConsole();
+            //Front page
+            PrintLogo();
+            PrintName();
+            Thread.Sleep(1000);
+            hideLogo();
+            MainMenu();
+            //Console.WriteLine("╘╦╛");
+            //Console.WriteLine(" ╙╜");
+           
 
             while (true)
             {
                 Console.Clear();
-                //Front page
-                //+Logo
-                //+Name
+                
+                
                 //Options (new game, sound, etc.)
                 DrawCars(trucks, carTwo, carThree, carFour, carFive);
+                DrawTrees(TreesOne, Turtles);
                 //Frog movement
                 //Points
                 //Time
@@ -537,12 +816,13 @@ namespace Frogger
                 //~sound effects
 
 
-
+                Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(200);
             }
-        }
 
-        
+            //return console color to default
+            
+        }
 
     }
 }
