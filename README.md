@@ -8,8 +8,8 @@ Assignment for the team work of C# 2 course in Telerik Academy.
 4. frog ride trees/vodorasli and check last stop (if the frog jump in the stools, or smack into the wall<br>
 6. <s>logo print</s> - Galina<br>
 7. <s>name of game print</s> - Galina<br>
-8. points iteration<br>
-9. time iteration<br>
+8. points iteration - Margarita<br>
+9. time iteration - Margarita<br>
 10. options (new game, send score, veiw klasirane, etc) //maybe sound of/on if there is - Galina<br>
 11. read name of player<br>
 12. print name+point in txt file and print the file content in descending order for option Klasirane<br>
@@ -18,5 +18,6 @@ Assignment for the team work of C# 2 course in Telerik Academy.
 15. exception handling // like pressed ecs button and others<br>
 16. Some bonuses for the points (see flash game link)<br>
 17.* sound effects<br>
+18. Presentation - Margarita <br>
 <br><br>
 Link to the flash game - http://www.bigmoneyarcade.com/games/frogger <br>
