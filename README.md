@@ -11,7 +11,7 @@ Assignment for the team work of C# 2 course in Telerik Academy.
 8. points iteration - Margarita<br>
 9. time iteration - Margarita<br>
 10. options (new game, send score, veiw klasirane, etc) //maybe sound of/on if there is - Galina<br>
-11. read name of player - IvanMomchilov<br>
+11. <s>read name of player</s> - IvanMomchilov<br>
 12. print name+point in txt file and print the file content in descending order for option Klasirane - Joro<br>
 13. live update of point and time<br>
 14.* colors and maybe background symbol forms?<br>
