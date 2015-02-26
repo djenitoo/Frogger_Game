@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace Frogger
 {
-    class Trees
+    class Forms
     {
         public int x;
         public int y;
+        public char[,] ch;
         public int speed;
-        public char[,] arr;
         public ConsoleColor color;
-
     }
 }
