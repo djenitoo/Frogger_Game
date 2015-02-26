@@ -1126,7 +1126,7 @@ namespace Frogger
                 } 
                 #endregion
                 
-                DrawLineNumbers();
+                //DrawLineNumbers();
                 DrawStops();
                 //Options (new game, sound, etc.)
                 //DrawTrees(TreesOne, Turtles);
