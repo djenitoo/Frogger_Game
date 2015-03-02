@@ -11,12 +11,18 @@ namespace Frogger
 {
     class Program
     {
+        #region Global values
         static int width = 69;
         static int height = 55;
-        //static bool isCrash = false;
+        static bool scorpionInSecondHalf = false;
+        static bool quitGame = false;
+        static bool[] slotsAreEmpty = { true, true, true, true };
         static int points = 0;
         static int time = 0;
         static int y = 25;
+        //static bool isPartOfObj = false;
+        static int lineOfInterest = 0;
+        static StringBuilder strOfInterest = new StringBuilder();
         static int showHide = 0;
         static int xOfTruckOne = width - 1;
         static int xOfcarThree = width - 10;
@@ -26,6 +32,9 @@ namespace Frogger
         static int xOfTreeOne = 10;
         static int yOfTree = 18;
         static int xOfTreeTwo = 20;
+        static int isPartOfTrees = 0;
+        static int[] bridges = { 10, 15, 25, 30, 40, 45, 55, 60 };
+        static int[] positions = { 5, 0, 20, 2, 55, 1, 38, 0, 2, 6, 12, 1, 30, 3, 45, 2, 60, 6, 25, 6 };
         private const ConsoleColor TITLE_COLOR = ConsoleColor.White;
         private const ConsoleColor LOGO_COLOR = ConsoleColor.Red;
         #region Logos
@@ -61,12 +70,15 @@ namespace Frogger
         static char[,] turtle2 = {  {'*','*',' ','*','*',' ','*','*'},
                                     {'*','*',' ','*','*',' ','*','*'} };
 
-        static char[,] scorpionForm = { { '╘', '╦', '╛' },
-                                        { ' ', '╙', '╜' } };
+        static string[] finalScorpionForm = {"╘╦╛", " ╙╜"};
+        static char[,] scorpionForm = {    { '╘', '╦', '╛' },
+                                           { ' ', '╙', '╜' } };
         static char[,] deadForm = {     { '×', ' ', '×' },
                                         { ' ', '_', ' ' } };
+        static string[] parentsScorpion = { "╘═╦═╛", "  ╙═╜" };
         public static Forms scorpion;
-        public static Forms tempCoord;
+        public static Forms tempCoord; 
+        #endregion
 
         private static void CustomizeConsole()
         {
@@ -461,17 +473,35 @@ namespace Frogger
             }
         }
 
-        private static void DrawCars(List<Forms> TreesOne, List<Forms> Turtles,List<Forms> trucks, List<Forms> carTwo, List<Forms> carThree, List<Forms> carFour, List<Forms> carFive)
+        private static void DrawMovingObjects(List<List<Forms>> TreesOne, List<List<Forms>> Turtles,List<Forms> trucks, List<Forms> carTwo, List<Forms> carThree, List<Forms> carFour, List<Forms> carFive)
         {
 
             #region MoveTrees
             for (int i = 0; i < TreesOne.Count; i++)
             {
-                PrintVehiclesRight(TreesOne[i].x, TreesOne[i].y, TreesOne[i].color, TreesOne[i].speed, TreesOne[i].ch, true);
-                TreesOne[i] = Temp(TreesOne[i], i, '+', TreesOne[i].speed);
-                if (i == 0)
+                strOfInterest = new StringBuilder();
+                strOfInterest.Append(' ', width);
+                for (int j = 0; j < TreesOne[i].Count; j++)
                 {
-                    xOfTreeOne = TreesOne[i].x;
+                    
+                    PrintVehicles(TreesOne[i][j].x, TreesOne[i][j].y, TreesOne[i][j].color, TreesOne[i][j].speed, TreesOne[i][j].ch, true, true);
+                    TreesOne[i][j] = Temp(TreesOne[i][j], i, '+', TreesOne[i][j].speed);
+                    if (i == 0)
+                    {
+                        xOfTreeOne = TreesOne[i][j].x;
+                    }
+                }
+                if (scorpionInSecondHalf && scorpion.y == TreesOne[i][0].y)
+                {
+                    if (strOfInterest[scorpion.x] == ' ' || strOfInterest[scorpion.x + 1] == ' ' || strOfInterest[scorpion.x + 2] == ' ' ||
+                        strOfInterest[scorpion.x] == '*' || strOfInterest[scorpion.x + 1] == '*' || strOfInterest[scorpion.x + 2] == '*')
+                    {
+                        scorpion.ch = deadForm;
+                        PrintScorpion(scorpion, scorpionInSecondHalf);
+                        Thread.Sleep(500);
+                        SetInitialPositionOfScorpion();
+                        PrintScorpion(scorpion, scorpionInSecondHalf);
+                    }
                 }
             }
             #endregion
@@ -479,53 +509,74 @@ namespace Frogger
             #region MoveTurtles
             for (int i = 0; i < Turtles.Count; i++)
             {
-                char[,] tempCharArr = new char[2, 8];
+                strOfInterest = new StringBuilder();
+                strOfInterest.Append(' ', width);
+                for (int j = 0; j < Turtles[i].Count; j++)
+                {
+                    char[,] tempCharArr = new char[2, 8];
 
-                if (i == 5 || i == 2)
-                {
-                    if (showHide == 5 || showHide == 6 || showHide == 7)
+                    #region check if diving turtle
+                    if (j == 2)
                     {
-                        showHide = (showHide + 1) % 8;
-                        tempCharArr = Turtles[i].ch;
-                        //continue;
+                        if (showHide == 5 || showHide == 6 || showHide == 7)
+                        {
+                            showHide = (showHide + 1) % 8;
+                            tempCharArr = Turtles[i][j].ch;
+                            //continue;
+                        }
+                        else if (showHide >= 1 && showHide <= 4)
+                        {
+                            tempCharArr = turtle2;
+                            showHide = (showHide + 1) % 8;
+                        }
+                        else if (showHide == 0)
+                        {
+                            showHide = (showHide + 1) % 8;
+                        }
                     }
-                    else if (showHide >= 1 && showHide <= 4)
+                    else
                     {
-                        tempCharArr = turtle2;
-                        showHide = (showHide + 1) % 8;
-                    }
-                    else if (showHide == 0)
-                    {
-                        showHide = (showHide + 1) % 8;
-                    }
-                }
-                else
-                {
-                    tempCharArr = Turtles[i].ch;
-                }
+                        tempCharArr = Turtles[i][j].ch;
+                    } 
+                    #endregion
 
-                PrintVehicles(Turtles[i].x, Turtles[i].y, Turtles[i].color, Turtles[i].speed, tempCharArr, true);
-                Turtles[i] = Temp(Turtles[i], i, '-', Turtles[i].speed);
-                if (i == 0)
-                {
-                    xOfTreeOne = Turtles[i].x;
+                    PrintVehicles(Turtles[i][j].x, Turtles[i][j].y, Turtles[i][j].color, Turtles[i][j].speed, tempCharArr, true, false);
+                    Turtles[i][j] = Temp(Turtles[i][j], i, '-', Turtles[i][j].speed);
+                    if (i == 0)
+                    {
+                        xOfTreeOne = Turtles[i][j].x;
+                    }
                 }
+                if (scorpionInSecondHalf && scorpion.y == Turtles[i][0].y)
+                {
+                    if (strOfInterest[scorpion.x] == ' ' || strOfInterest[scorpion.x + 1] == ' ' || strOfInterest[scorpion.x + 2] == ' ' ||
+                        strOfInterest[scorpion.x] == '*' || strOfInterest[scorpion.x + 1] == '*' || strOfInterest[scorpion.x + 2] == '*')
+                    {
+                        scorpion.ch = deadForm;
+                        PrintScorpion(scorpion, scorpionInSecondHalf);
+                        Thread.Sleep(500);
+                        SetInitialPositionOfScorpion();
+                        PrintScorpion(scorpion, scorpionInSecondHalf);
+                    }
+                    else
+                    {
+                        scorpion.x = lineOfInterest;
+                        //PrintScorpion(scorpion, scorpionInSecondHalf);
+                    }
+                }
+                
             }
             #endregion
 
             #region MoveTruck
             for (int i = 0; i < trucks.Count; i++)
             {
-                PrintVehicles(trucks[i].x, trucks[i].y, trucks[i].color, trucks[i].speed, trucks[i].ch, false);
+                PrintVehicles(trucks[i].x, trucks[i].y, trucks[i].color, trucks[i].speed, trucks[i].ch, false, false);
                 trucks[i] = Temp(trucks[i], i, '-', trucks[i].speed);
                 if (i == 0)
                 {
                     xOfTruckOne = trucks[i].x;
                 }
-                //else
-                //{
-                //    xOfTruckTwo = trucks[i].x;
-                //}
 
             } 
             #endregion
@@ -533,7 +584,7 @@ namespace Frogger
             #region MoveCarTwo
             for (int i = 0; i < carTwo.Count; i++)
             {
-                PrintVehiclesRight(carTwo[i].x, carTwo[i].y, carTwo[i].color, carTwo[i].speed, carTwo[i].ch, false);
+                PrintVehicles(carTwo[i].x, carTwo[i].y, carTwo[i].color, carTwo[i].speed, carTwo[i].ch, false, true);
                 carTwo[i] = Temp(carTwo[i], i, '+', carTwo[i].speed);
                 if (i == 0)
                 {
@@ -545,7 +596,7 @@ namespace Frogger
             #region MoveCarThree
             for (int i = 0; i < carThree.Count; i++)
             {
-                PrintVehicles(carThree[i].x, carThree[i].y, carThree[i].color, carThree[i].speed, carThree[i].ch, false);
+                PrintVehicles(carThree[i].x, carThree[i].y, carThree[i].color, carThree[i].speed, carThree[i].ch, false, false);
                 carThree[i] = Temp(carThree[i], i, '-', carThree[i].speed);
                 if (i == 0)
                 {
@@ -558,7 +609,7 @@ namespace Frogger
             #region MoveCarFour
             for (int i = 0; i < carFour.Count; i++)
             {
-                PrintVehiclesRight(carFour[i].x, carFour[i].y, carFour[i].color, carFour[i].speed, carFour[i].ch, false);
+                PrintVehicles(carFour[i].x, carFour[i].y, carFour[i].color, carFour[i].speed, carFour[i].ch, false, true);
                 carFour[i] = Temp(carFour[i], i, '+', carFour[i].speed);
                 if (i == 0)
                 {
@@ -570,7 +621,7 @@ namespace Frogger
             #region MoveCarFive
             for (int i = 0; i < carFive.Count; i++)
             {
-                PrintVehicles(carFive[i].x, carFive[i].y, carFive[i].color, carFive[i].speed, carFive[i].ch, false);
+                PrintVehicles(carFive[i].x, carFive[i].y, carFive[i].color, carFive[i].speed, carFive[i].ch, false, false);
                 carFive[i] = Temp(carFive[i], i, '-', carFive[i].speed);
                 if (i == 0)
                 {
@@ -582,56 +633,116 @@ namespace Frogger
 
         }
 
-        private static void PrintVehicles(int x, int y, ConsoleColor color, int speed, char[,] ch, bool isTreeOrTurtle)
+        private static void PrintVehicles(int x, int y, ConsoleColor color, int speed, char[,] ch, bool isTreeOrTurtle, bool rightOrientation)
         {
-            for (int j = 0; j < ch.GetLength(0); j++)
+            #region rightOrientation true
+            if (rightOrientation)
             {
-                for (int i = 0; i < ch.GetLength(1); i++)
+                for (int j = 0, p = 0; j < ch.GetLength(0); j++, p++)
                 {
-                    Console.SetCursorPosition((x + i) % width, y + j);
-                    Console.ForegroundColor = color;
-                    Console.WriteLine(ch[j, i]);
-                    int coordX = (x + i) % width;
-                    int coordY = y + j;
-                    if (!isTreeOrTurtle && (scorpion.y == coordY || scorpion.y + 1 == coordY) && 
-                        (scorpion.x == coordX || scorpion.x + 1 == coordX || scorpion.x + 2 == coordX))
+
+                    for (int i = ch.GetLength(1) - 1, q = 0; i >= 0; i--, q++)
                     {
-                        scorpion.ch = deadForm;
-                        PrintScorpion(scorpion);
-                        Thread.Sleep(500);
-                        SetInitialPositionOfScorpion();
-                        PrintScorpion(scorpion);
+                        Console.SetCursorPosition(((x - q) + width) % width, y + p);
+                        Console.ForegroundColor = color;
+                        Console.WriteLine(ch[j, i]);
+
+                        int coordX = ((x - q) + width) % width;
+                        int coordY = y + p;
+                        if (!isTreeOrTurtle && (scorpion.y == coordY || scorpion.y + 1 == coordY) &&
+                            (scorpion.x == coordX || scorpion.x + 1 == coordX || scorpion.x + 2 == coordX))
+                        {
+                            scorpion.ch = deadForm;
+                            PrintScorpion(scorpion, scorpionInSecondHalf);
+                            Thread.Sleep(500);
+                            SetInitialPositionOfScorpion();
+                            PrintScorpion(scorpion, scorpionInSecondHalf);
+                        }
+                        else if (isTreeOrTurtle && (scorpion.y == coordY) &&
+                                (scorpion.x == coordX && scorpion.x + 2 <= x + ch.GetLength(1)))
+                        {
+                            scorpion.x = scorpion.x + speed;
+                            if (scorpion.x < 0 || scorpion.x + 2 >= width)
+                            {
+                                //scorpion.ch = deadForm;
+                                //PrintScorpion(scorpion, scorpionInSecondHalf);
+                                Thread.Sleep(500);
+                                SetInitialPositionOfScorpion();
+                                PrintScorpion(scorpion, scorpionInSecondHalf);
+                            }
+                            //else
+                            //{
+                            //    PrintScorpion(scorpion, scorpionInSecondHalf);
+                            //    isPartOfObj = true;
+                            //}
+                        }
+                        if (isTreeOrTurtle && scorpion.y == coordY)
+                        {
+                            strOfInterest[coordX] = ch[j, i];
+                        }
+                        //else if (isTreeOrTurtle && (scorpion.y == coordY) &&
+                        //    (scorpion.x != coordX || scorpion.x + 1 != coordX || scorpion.x + 2 == coordX))
+                        //{
+                        //    //Thread.Sleep(500);
+                        //    SetInitialPositionOfScorpion();
+                        //    PrintScorpion(scorpion, scorpionInSecondHalf);
+                        //}
+
                     }
                 }
-            }
-        }
-
-        private static void PrintVehiclesRight(int x, int y, ConsoleColor color, int speed, char[,] ch, bool isTreeOrTurtle)
-        {
-
-            for (int j = 0, p = 0; j < ch.GetLength(0); j++, p++)
+            } 
+            #endregion
+            #region rightOrientation false
+            else
             {
-
-                for (int i = ch.GetLength(1) - 1, q = 0; i >= 0; i--, q++)
+                for (int j = 0; j < ch.GetLength(0); j++)
                 {
-                    Console.SetCursorPosition(((x - q) + width) % width, y + p);
-                    Console.ForegroundColor = color;
-                    Console.WriteLine(ch[j, i]);
-
-                    int coordX = ((x - q) + width) % width;
-                    int coordY = y + p;
-                    if (!isTreeOrTurtle && (scorpion.y == coordY || scorpion.y + 1 == coordY) && 
-                        (scorpion.x == coordX || scorpion.x + 1 == coordX || scorpion.x + 2 == coordX))
+                    for (int i = 0; i < ch.GetLength(1); i++)
                     {
-                        scorpion.ch = deadForm;
-                        PrintScorpion(scorpion);
-                        Thread.Sleep(500);
-                        SetInitialPositionOfScorpion();
-                        PrintScorpion(scorpion);
-                    }
+                        Console.SetCursorPosition((x + i) % width, y + j);
+                        Console.ForegroundColor = color;
+                        Console.WriteLine(ch[j, i]);
+                        int coordX = (x + i) % width;
+                        int coordY = y + j;
+                        if (!isTreeOrTurtle && (scorpion.y == coordY || scorpion.y + 1 == coordY) &&
+                            (scorpion.x == coordX || scorpion.x + 1 == coordX || scorpion.x + 2 == coordX))
+                        {
+                            scorpion.ch = deadForm;
+                            PrintScorpion(scorpion, scorpionInSecondHalf);
+                            Thread.Sleep(500);
+                            SetInitialPositionOfScorpion();
+                            PrintScorpion(scorpion, scorpionInSecondHalf);
+                        }
+                        else if (isTreeOrTurtle && (scorpion.y == coordY || scorpion.y + 1 == coordY) &&
+                                (scorpion.x == coordX && scorpion.x + 2 <= x + ch.GetLength(1)))
+                        {
+                            //scorpion.x = coordX - speed;
+                            lineOfInterest = coordX - speed;
+                            if (lineOfInterest < 0 || lineOfInterest + 2 >= width)
+                            {
+                                //scorpion.ch = deadForm;
+                                //PrintScorpion(scorpion, scorpionInSecondHalf);
+                                Thread.Sleep(500);
+                                SetInitialPositionOfScorpion();
+                                PrintScorpion(scorpion, scorpionInSecondHalf);
+                            }
+                            //else
+                            //{
+                            //    PrintScorpion(scorpion, scorpionInSecondHalf);
+                            //    //isPartOfObj = true;
+                            //}
+                        }
 
+                        if (isTreeOrTurtle && scorpion.y == coordY)
+                        {
+                            strOfInterest[coordX] = ch[j, i];
+                        }
+
+                    }
                 }
-            }
+            } 
+            #endregion
+            
         }
 
         private static Forms Temp(Forms item, int i, char ch, int speed)
@@ -653,73 +764,9 @@ namespace Frogger
                     temp.x = 0;
                 }
             }
-
-            //isCrash = CheckCrash(temp);
-            //if (isCrash)
-            //{
-            //    scorpion.ch = deadForm;
-            //    PrintScorpion(scorpion);
-            //    Thread.Sleep(500);
-            //    SetInitialPositionOfScorpion();
-            //    PrintScorpion(scorpion);
-            //}
             return temp;
         }
 
-        //private static void DrawTrees(List<Forms> TreesOne, List<Forms> Turtles)
-        //{
-        //    #region MoveTrees
-        //    for (int i = 0; i < TreesOne.Count; i++)
-        //    {
-        //        PrintVehiclesRight(TreesOne[i].x, TreesOne[i].y, TreesOne[i].color, TreesOne[i].speed, TreesOne[i].ch);
-        //        TreesOne[i] = Temp(TreesOne[i], i, '+', TreesOne[i].speed);
-        //        if (i == 0)
-        //        {
-        //            xOfTreeOne = TreesOne[i].x;
-        //        }
-        //    }
-        //    #endregion
-
-
-        //    #region MoveTurtles
-        //    for (int i = 0; i < Turtles.Count; i++)
-        //    {
-        //        char[,] tempCharArr = new char[2, 8];
-
-        //        if (i == 5 || i == 2)
-        //        {
-        //            if (showHide == 5 || showHide == 6 || showHide == 7)
-        //            {
-        //                showHide = (showHide + 1) % 8;
-        //                tempCharArr = Turtles[i].ch;
-        //                //continue;
-        //            }
-        //            else if (showHide >= 1 && showHide <= 4)
-        //            {
-        //                tempCharArr = turtle2;
-        //                showHide = (showHide + 1) % 8;
-        //            }
-        //            else if (showHide == 0)
-        //            {
-        //                showHide = (showHide + 1) % 8;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            tempCharArr = Turtles[i].ch;
-        //        }
-
-        //        PrintVehicles(Turtles[i].x, Turtles[i].y, Turtles[i].color, Turtles[i].speed, tempCharArr);
-        //        Turtles[i] = Temp(Turtles[i], i, '-', Turtles[i].speed);
-        //        if (i == 0)
-        //        {
-        //            xOfTreeOne = Turtles[i].x;
-        //        }
-        //    }
-        //    #endregion
-        //}
-
-        
         // M   A   I   N
 
         static void Main(string[] args)
@@ -769,8 +816,8 @@ namespace Frogger
             char[,] charrie2 = { {'┌','#','#','#','#','#','#','#','#','#','┐'},
                                  {'└','#','#','#','#','#','#','#','#','#','┘'}};
 
-            char[,] turtle1 = { {' ', '@','@',' ','@','@',' ','@','@'},
-                                {' ', '@','@',' ','@','@',' ','@','@'} };
+            char[,] turtle1 = { {'-', '@','@','-','@','@','-','@','@'},
+                                {'-', '@','@','-','@','@','-','@','@'} };
 
             #endregion
 
@@ -915,8 +962,8 @@ namespace Frogger
             Forms tempB = new Forms();
             Forms tempC = new Forms();
 
-            List<Forms> TreesOne = new List<Forms>();
-
+            List<List<Forms>> TreesOne = new List<List<Forms>>();
+            List<Forms> TreesTemp = new List<Forms>();
             #region One
             // O N E
             tempA.x = xOfTreeOne;
@@ -924,21 +971,21 @@ namespace Frogger
             tempA.color = ConsoleColor.DarkRed;
             tempA.ch = charrie;
             tempA.speed = 2;
-            TreesOne.Add(tempA);
+            TreesTemp.Add(tempA);
 
             tempB.x = tempA.x - 10;
             tempB.y = tempA.y;
             tempB.color = tempA.color;
             tempB.ch = tempA.ch;
             tempB.speed = tempA.speed;
-            TreesOne.Add(tempB);
+            TreesTemp.Add(tempB);
 
             tempC.x = tempA.x - 25;
             tempC.y = tempA.y;
             tempC.color = tempA.color;
             tempC.ch = tempA.ch;
             tempC.speed = tempA.speed;
-            TreesOne.Add(tempC);
+            TreesTemp.Add(tempC);
 
             tempC = new Forms();
             tempC.x = tempA.x - 35;
@@ -946,7 +993,7 @@ namespace Frogger
             tempC.color = tempA.color;
             tempC.ch = tempA.ch;
             tempC.speed = tempA.speed;
-            TreesOne.Add(tempC);
+            TreesTemp.Add(tempC);
 
             tempC = new Forms();
             tempC.x = tempA.x - 50;
@@ -954,35 +1001,38 @@ namespace Frogger
             tempC.color = tempA.color;
             tempC.ch = tempA.ch;
             tempC.speed = tempA.speed;
-            TreesOne.Add(tempC);
+            TreesTemp.Add(tempC);
+            TreesOne.Add(TreesTemp);
             #endregion
 
             #region Two
+
             // T   W   O 
             tempA = new Forms();
             tempB = new Forms();
             tempC = new Forms();
+            TreesTemp = new List<Forms>();
 
             tempA.x = xOfTreeTwo;
             tempA.y = yOfTree - 2;
             tempA.color = ConsoleColor.DarkYellow;
             tempA.ch = charrie2;
             tempA.speed = 1;
-            TreesOne.Add(tempA);
+            TreesTemp.Add(tempA);
 
             tempB.x = tempA.x - 15;
             tempB.y = tempA.y;
             tempB.color = tempA.color;
             tempB.ch = tempA.ch;
             tempB.speed = tempA.speed;
-            TreesOne.Add(tempB);
+            TreesTemp.Add(tempB);
 
             tempC.x = tempA.x - 29;
             tempC.y = tempA.y;
             tempC.color = tempA.color;
             tempC.ch = tempA.ch;
             tempC.speed = tempA.speed;
-            TreesOne.Add(tempC);
+            TreesTemp.Add(tempC);
 
             tempC = new Forms();
             tempC.x = tempA.x + 14;
@@ -990,7 +1040,8 @@ namespace Frogger
             tempC.color = tempA.color;
             tempC.ch = tempA.ch;
             tempC.speed = tempA.speed;
-            TreesOne.Add(tempC);
+            TreesTemp.Add(tempC);
+            TreesOne.Add(TreesTemp);
             #endregion
 
             #region Three
@@ -998,20 +1049,21 @@ namespace Frogger
             tempA = new Forms();
             tempB = new Forms();
             tempC = new Forms();
+            TreesTemp = new List<Forms>();
 
             tempA.x = xOfTreeTwo;
             tempA.y = yOfTree - 6;
             tempA.color = ConsoleColor.DarkGreen;
             tempA.ch = charrie3;
             tempA.speed = 2;
-            TreesOne.Add(tempA);
+            TreesTemp.Add(tempA);
 
             tempB.x = tempA.x - 20;
             tempB.y = tempA.y;
             tempB.color = tempA.color;
             tempB.ch = tempA.ch;
             tempB.speed = tempA.speed;
-            TreesOne.Add(tempB);
+            TreesTemp.Add(tempB);
 
             tempB = new Forms();
             tempB.x = tempA.x - 40;
@@ -1019,14 +1071,16 @@ namespace Frogger
             tempB.color = tempA.color;
             tempB.ch = tempA.ch;
             tempB.speed = tempA.speed;
-            TreesOne.Add(tempB);
+            TreesTemp.Add(tempB);
+
+            TreesOne.Add(TreesTemp);
             #endregion
 
             #endregion
 
             #region Turtles
-            List<Forms> Turtles = new List<Forms>();
-
+            List<List<Forms>> Turtles = new List<List<Forms>>();
+            List<Forms> TurtlesTemp = new List<Forms>();
             #region One
             tempA = new Forms();
             tempB = new Forms();
@@ -1037,48 +1091,51 @@ namespace Frogger
             tempA.color = ConsoleColor.Red;
             tempA.speed = 2;
             tempA.ch = turtle1;
-            Turtles.Add(tempA);
+            TurtlesTemp.Add(tempA);
 
             tempB.x = tempA.x + 20;
             tempB.y = tempA.y;
             tempB.color = tempA.color;
             tempB.speed = tempA.speed;
             tempB.ch = tempA.ch;
-            Turtles.Add(tempB);
+            TurtlesTemp.Add(tempB);
 
             tempC.x = tempA.x + 40;
             tempC.y = tempA.y;
             tempC.color = tempA.color;
             tempC.speed = tempA.speed;
             tempC.ch = tempA.ch;
-            Turtles.Add(tempC);
+            TurtlesTemp.Add(tempC);
+            Turtles.Add(TurtlesTemp);
             #endregion
 
             #region Two
             tempA = new Forms();
             tempB = new Forms();
             tempC = new Forms();
+            TurtlesTemp = new List<Forms>();
 
             tempA.x = xOfTreeOne;
             tempA.y = yOfTree - 4;
             tempA.color = ConsoleColor.Red;
             tempA.speed = 2;
             tempA.ch = turtle1;
-            Turtles.Add(tempA);
+            TurtlesTemp.Add(tempA);
 
             tempB.x = tempA.x + 20;
             tempB.y = tempA.y;
             tempB.color = tempA.color;
             tempB.speed = tempA.speed;
             tempB.ch = tempA.ch;
-            Turtles.Add(tempB);
+            TurtlesTemp.Add(tempB);
 
             tempC.x = tempA.x + 40;
             tempC.y = tempA.y;
             tempC.color = tempA.color;
             tempC.speed = tempA.speed;
             tempC.ch = tempA.ch;
-            Turtles.Add(tempC);
+            TurtlesTemp.Add(tempC);
+            Turtles.Add(TurtlesTemp);
             #endregion
 
             #endregion
@@ -1102,7 +1159,7 @@ namespace Frogger
            //Main game
             while (true)
             {
-                Console.Clear();
+                
                 #region KeyReading
                 if (Console.KeyAvailable)
                 {
@@ -1123,31 +1180,118 @@ namespace Frogger
                     {
                         MoveScorpionRight();
                     }
+                    else if (keyPressed.Key == ConsoleKey.P)
+                    {
+                        #region pause processing
+                        while (true)
+                        {
+                            PrintStringOnPosition(width / 2 - 4, 22, "P A U S E", ConsoleColor.White);
+                            if (Console.KeyAvailable)
+                            {
+                                ConsoleKeyInfo keyP = Console.ReadKey();
+                                if (keyP.Key == ConsoleKey.P)
+                                {
+                                    break;
+                                }
+                            }
+                        } 
+                        #endregion
+                    }
+                    else if (keyPressed.Key == ConsoleKey.Q)
+                    {
+                        #region quit processing
+                        while (true)
+                        {
+                            PrintStringOnPosition(width / 2 - 8, 22, "QUIT GAME? Y/N", ConsoleColor.White);
+                            if (Console.KeyAvailable)
+                            {
+                                ConsoleKeyInfo keyQ = Console.ReadKey();
+                                if (keyQ.Key == ConsoleKey.Y)
+                                {
+                                    quitGame = true;
+                                    break;
+                                }
+                                else if (keyQ.Key == ConsoleKey.N)
+                                {
+                                    quitGame = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    quitGame = false;
+                                    break;
+                                }
+                            }
+                        } 
+                        #endregion
+                    }
                 } 
                 #endregion
+
+                if (quitGame)
+                {
+                    return;
+                }
+
+                Console.Clear();
                 
                 //DrawLineNumbers();
                 DrawStops();
-                //Options (new game, sound, etc.)
-                //DrawTrees(TreesOne, Turtles);
-                PrintScorpion(scorpion);
-                DrawCars(TreesOne, Turtles, trucks, carTwo, carThree, carFour, carFive);
-                //Frog movement
-                //Points
-                //Time
+                if (scorpion.y <= 22)
+                {
+                    scorpionInSecondHalf = true;
+                }
+                else
+                {
+                    scorpionInSecondHalf = false;
+                }
+                DrawMovingObjects(TreesOne, Turtles, trucks, carTwo, carThree, carFour, carFive);
+                if ((!slotsAreEmpty[0] && !slotsAreEmpty[1] && !slotsAreEmpty[2] && !slotsAreEmpty[3]))
+                {
+                    Thread.Sleep(400);
+                    break;
+                }
+                PrintScorpion(scorpion, scorpionInSecondHalf);
+                
                 //Reading name of player
-                //Print name and score in txt file
-                //~ colors and some bg forms with unicode chars?
                 // graphic down with scorpions = numbers of lifes left
                 //exception handling
                 //~sound effects
 
                 Console.ForegroundColor = ConsoleColor.White;
+                Thread.Sleep(300);
                 
-                Thread.Sleep(200);
+                // this break of loop if all 4 scorpions reach its slot  
+                
             }
 
-            //return console color to default
+            // HERE succesful end of game change of forrest
+            #region change family in the forrest
+            if (!(slotsAreEmpty[0] && slotsAreEmpty[1] && slotsAreEmpty[2] && slotsAreEmpty[3]))
+            {
+                string[] childredScorpi = { "╘╦╛ ╘╦╛ ╘╦╛ ╘╦╛", " ╙╜  ╙╜  ╙╜  ╙╜" };
+                int moveRight = 12;
+                for (int i = 0, g = 0; g < 4; g++, i = (i + 1) % 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.SetCursorPosition(positions[18] + moveRight, positions[19] + i);
+                    Console.WriteLine(childredScorpi[i]);
+                }
+
+                for (int q = 0; q < slotsAreEmpty.Length; q++)
+                {
+                    for (int s = 0; s < finalScorpionForm.Length; s++)
+                    {
+                        Console.SetCursorPosition(bridges[(q * 2)] + 1, 10 + s);
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine(new string(' ', finalScorpionForm[s].Length));
+                        Console.ResetColor();
+                    }
+                }
+            } 
+            #endregion
+
+            // ask for name of player, then print his point in the table?
             
         }
 
@@ -1173,19 +1317,113 @@ namespace Frogger
                 }
             }
             Console.ResetColor();
+            for (int i = 8; i < 10; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    Console.SetCursorPosition(j, i);
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.Write('▒');
+                }
+            }
+            Console.ResetColor();
+            for (int i = 10; i < 12; i++)
+            {
+                
+                for (int j = 0; j < bridges.Length - 1; j+= 2)
+                {
+                    
+                    int count = bridges[j];
+                    while (count <= bridges[j + 1])
+                    {
+                        Console.SetCursorPosition(count, i);
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        Console.Write(' ');
+                        count++;
+                    }
+                }
+                Console.ResetColor();
+                for (int q = 0; q < slotsAreEmpty.Length; q++)
+                {
+                    if (!slotsAreEmpty[q])
+                    {
+                        for (int s = 0; s < finalScorpionForm.Length; s++)
+                        {
+                            Console.SetCursorPosition(bridges[(q * 2)] + 1, 10 + s);
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.BackgroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine(finalScorpionForm[s]);
+                            Console.ResetColor();
+                        }
+                    }
+                }
+            }
+            DrawForest();
         }
 
-        //private static bool CheckCrash(Forms item)
-        //{
-        //    if ((item.x == scorpion.x || item.x == scorpion.x + 1) && (item.y == scorpion.y || item.y == scorpion.y + 1))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
+        private static void DrawForest()
+        {
+            #region Forrest
+            string[] tree = { " CCC ", "CCCCC", " CCC ", "  #   ", "  #     " };
+            string[] grass = { "v v v v", "| | | |" };
+            
+            for (int p = 0; p < positions.Length - 1; p += 2)
+            {
+                #region draw static art
+                if (p < 8)
+                {
+                    for (int i = 0; i < tree.Length; i++)
+                    {
+                        Console.SetCursorPosition(positions[p], (positions[p + 1]) + i);
+                        if (i < 3)
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGray;
+                        }
+                        Console.WriteLine(tree[i]);
+                        Console.ResetColor();
+                    }
+                }
+                else if (p < 18)
+                {
+                    for (int i = 0; i < grass.Length; i++)
+                    {
+                        Console.SetCursorPosition(positions[p], positions[p + 1] + i);
+                        if (i < 1)
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        }
+                        Console.WriteLine(grass[i]);
+                    }
+                }
+                else if (p >= 18)
+                {
+                    int moveRight = 0;
+                    for (int i = 0, g = 0; g < 4; g++, i = (i + 1) % 2)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        if (g > 1)
+                        {
+                            moveRight = 5;
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                        }
+
+                        Console.SetCursorPosition(positions[p] + moveRight, positions[p + 1] + i);
+                        Console.WriteLine(parentsScorpion[i]);
+                    }
+                }
+                #endregion
+
+            }
+            #endregion
+        }
 
         private static void DrawLineNumbers()
         {
@@ -1206,18 +1444,49 @@ namespace Frogger
             scorpion.color = ConsoleColor.Yellow;
         }
 
-        private static void PrintScorpion(Forms scorpion)
+        private static void PrintScorpion(Forms scorpion, bool scInSecHalf)
         {
-            char[,] ch = scorpion.ch;
-            ConsoleColor color = scorpion.color;
+            bool isDead = false;
             int x = scorpion.x;
             int y = scorpion.y;
+            if (scorpion.y == 10)
+            {
+                if (!((scorpion.x >= 10 && scorpion.x <= 15) || (scorpion.x >= 25 && scorpion.x <= 30) ||
+                    (scorpion.x >= 40 && scorpion.x <= 45) || (scorpion.x >= 55 && scorpion.x <= 60)))
+                {
+                    isDead = true;
+                    scorpion.ch = deadForm;
+                    scorpion.color = ConsoleColor.Red;
+                }
+                else
+                {
+                    if ((scorpion.x > 10 && scorpion.x < 15) && slotsAreEmpty[0] == true)
+                    {
+                        slotsAreEmpty[0] = false;
 
+                    }
+                    else if ((scorpion.x > 25 && scorpion.x < 30) && slotsAreEmpty[1] == true)
+                    {
+                        slotsAreEmpty[1] = false;
+                    }
+                    else if ((scorpion.x > 40 && scorpion.x < 45) && slotsAreEmpty[2] == true)
+                    {
+                        slotsAreEmpty[2] = false;
+                    }
+                    else if ((scorpion.x > 55 && scorpion.x < 60) && slotsAreEmpty[3] == true)
+                    {
+                        slotsAreEmpty[3] = false;
+                    }
+
+                    SetInitialPositionOfScorpion();
+                }
+            }
+            char[,] ch = scorpion.ch;
+            ConsoleColor color = scorpion.color;
             for (int j = 0; j < ch.GetLength(0); j++)
             {
                 for (int i = 0; i < ch.GetLength(1); i++)
                 {
-
                     if (y == 22 || y == 23 || y == 39 || y == 40)
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGreen;
@@ -1227,7 +1496,26 @@ namespace Frogger
                     Console.WriteLine(ch[j, i]);
                     Console.ResetColor();
                 }
+                if (j + 1 == ch.GetLength(0))
+                {
+                    if (isDead)
+                    {
+                        Thread.Sleep(500);
+                        SetInitialPositionOfScorpion();
+                        isDead = false;
+                        //PrintScorpion(scorpion, scorpionInSecondHalf);
+
+                    }
+                }
             }
+            
+        }
+
+        static void PrintStringOnPosition(int x, int y, string str, ConsoleColor color = ConsoleColor.Gray)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.ForegroundColor = color;
+            Console.Write(str);
         }
 
         private static void MoveScorpionUp()
@@ -1237,7 +1525,7 @@ namespace Frogger
             {
                 step = 2;
             }
-            if (scorpion.y >= 2)
+            if (scorpion.y + step >= 14)
             {
                 tempCoord = new Forms();
                 tempCoord.x = scorpion.x;
@@ -1247,8 +1535,6 @@ namespace Frogger
                 tempCoord.y = scorpion.y - step;
                 scorpion = tempCoord;
             }
-            
-            //scorpion.y = scorpion.y - 1;
         }
         private static void MoveScorpionDown()
         {
@@ -1257,7 +1543,7 @@ namespace Frogger
             {
                 step = 2;
             }
-            if (scorpion.y < height - 4)
+            if (scorpion.y < 42 && scorpion.y + step < 42)
             {
                 tempCoord = new Forms();
                 tempCoord.x = scorpion.x;
@@ -1300,6 +1586,5 @@ namespace Frogger
             }
            
         }
-
     }
 }
