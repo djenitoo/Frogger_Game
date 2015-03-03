@@ -14,4 +14,4 @@ Things to do:
 13. live update of point and time
 14. colors and maybe background symbol forms?
 15. exception handling // like pressed ecs button and others
-16.* sound effects
+16.* sound effects Ivan Momchilov
