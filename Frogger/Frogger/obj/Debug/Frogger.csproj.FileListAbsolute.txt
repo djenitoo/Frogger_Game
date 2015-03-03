@@ -16,3 +16,9 @@ D:\Galina\Desktop\Telerik ACADEMY\C# Programmer\C# - Parth2\10.Отборна р
 d:\Galina\Desktop\Telerik ACADEMY\C# Programmer\C# - Parth2\10.Отборна работа\Scorpioner\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.exe
 d:\Galina\Desktop\Telerik ACADEMY\C# Programmer\C# - Parth2\10.Отборна работа\Scorpioner\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.pdb
 d:\Galina\Desktop\Telerik ACADEMY\C# Programmer\C# - Parth2\10.Отборна работа\Scorpioner\Frogger_Game\Frogger\Frogger\obj\Debug\Frogger.csprojResolveAssemblyReference.cache
+C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.exe.config
+C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\obj\Debug\Frogger.exe
+C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\obj\Debug\Frogger.pdb
+C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.exe
+C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.pdb
+C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\obj\Debug\Frogger.csprojResolveAssemblyReference.cache
