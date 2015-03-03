@@ -20,8 +20,8 @@ namespace Frogger
         static bool scorpionInSecondHalf = false;
         static bool quitGame = false;
         static bool[] slotsAreEmpty = { true, true, true, true };
-        static int points = 300;
-        static int time = 3;
+        static int points = 0;
+        static int time = 500;
         static int y = 25;
         //static bool isPartOfObj = false;
         static int lineOfInterest = 0;
