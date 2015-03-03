@@ -23,7 +23,6 @@ namespace Frogger
         static int points = 0;
         static int time = 500;
         static int y = 25;
-        //static bool isPartOfObj = false;
         static int lineOfInterest = 0;
         static StringBuilder strOfInterest = new StringBuilder();
         static int showHide = 0;
@@ -1270,145 +1269,10 @@ namespace Frogger
             {
                 //time reduction & time check for less than 0
                 time--;
+                
                 if (time <= 0)
                 {
-                    PrintStringOnPosition(width / 2 - 10, 43, "G A M E  O V E R !!", ConsoleColor.Red);
-                    PrintStringOnPosition(10, 45, "Enter your name: ", ConsoleColor.Red);
-                    string name = string.Empty;
-                    try
-                    {
-                        name = Console.ReadLine();
-                        if (name == string.Empty)
-                        {
-                            name = "Alien";
-                            throw new ArgumentNullException();
-                        }
-                    }
-                    catch (ArgumentNullException)
-                    {
-                        Console.WriteLine("Invalid name");
-                    }
-                    PrintStringOnPosition(7, 46, "", ConsoleColor.Red);
-                    finalPoints = points + ((1000 % (1000 - time)) - 1);
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
-                    {
-                        file.WriteLine("{0} {1}", finalPoints.ToString().PadRight(8), name);
-                    }
-
-                    #region show klasirane
-                    try
-                    {
-                        Console.Clear();
-                        PrintName();
-                        Console.SetCursorPosition((width / 2) - 10, 10);
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine("- HIGH SCORES -\n");
-
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        List<string> playerName = new List<string>();
-                        using (StreamReader reader = new StreamReader(@"..\..\HighScores.txt"))
-                        {
-                            string line = reader.ReadLine();
-                            while (line != null)
-                            {
-                                playerName.Add(line); //Add name and score to the list
-                                line = reader.ReadLine();
-                            }
-                        }
-                        string[] playersArr = playerName.ToArray();
-                        Array.Sort(playersArr, new AlphanumComparatorFast());
-                        while (playerName.Count > 10)
-                        {
-                            playerName.RemoveAt(playerName.Count - 1);
-                        }
-
-                        //string newEntry = points + "\t" + nameOfPlayer;
-                        //playerName.Add(newEntry);
-                        int counter = 0;
-                        for (int i = playersArr.Length - 1, j = 0; i >= playersArr.Length - 13; i--, j++)
-                        {
-                            Console.SetCursorPosition((width / 2) - 10, 12 + j);
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            playerName = playersArr.ToList();
-                            Console.WriteLine(playersArr[i]);
-                        }
-                        using (var writer = new StreamWriter(@"..\..\HighScores.txt"))
-                        {
-                            for (int i = playersArr.Length - 1; i >= 0; i--)
-                            {
-                                writer.WriteLine(playerName[i]); //Writes name and score supposedly
-                            }
-                        }
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        Console.Error.WriteLine("\tCannot find 'HighScores.txt'.");
-                    }
-
-                    #region menu - return/quit
-                    while (true)
-                    {
-                        for (int i = 0; i < secMenuItems.Length; i++)
-                        {
-                            if (secondChoice == i)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                            }
-                            else
-                            {
-                                Console.ForegroundColor = ConsoleColor.Gray;
-                            }
-                            Console.SetCursorPosition(25 + (10 * i), 27);
-                            Console.WriteLine(secMenuItems[i]);
-                            //Console.ResetColor();
-                        }
-                        if (Console.KeyAvailable)
-                        {
-                            for (int i = 0; i < secMenuItems.Length; i++)
-                            {
-                                if (secondChoice == i)
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                }
-                                else
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Gray;
-                                }
-                                Console.SetCursorPosition(25 + (10 * i), 27);
-                                Console.WriteLine(secMenuItems[i]);
-                                //Console.ResetColor();
-                            }
-
-                            ConsoleKeyInfo pressedKey = Console.ReadKey();
-                            if (pressedKey.Key == ConsoleKey.LeftArrow)
-                            {
-                                secondChoice = (secondChoice - 1 + 2) % 2;
-                            }
-                            if (pressedKey.Key == ConsoleKey.RightArrow)
-                            {
-                                secondChoice = (secondChoice + 1) % 2;
-                            }
-                            if (pressedKey.Key == ConsoleKey.Enter)
-                            {
-                                break;
-                            }
-                        }
-                    }
-
-                    if (secondChoice == 0)
-                    {
-                        var fileName = Assembly.GetExecutingAssembly().Location;
-                        System.Diagnostics.Process.Start(fileName);
-
-                        Environment.Exit(0);
-                    }
-                    else if (secondChoice == 1)
-                    {
-                        return;
-                    } 
-                    #endregion
-                    #endregion
-                    //Environment.Exit(0);
+                    break;
                 }
                 #region KeyReading
                 if (Console.KeyAvailable)
@@ -1482,12 +1346,11 @@ namespace Frogger
                 {
                     return;
                 }
-
+                //DrawLineNumbers();
                 Console.Clear();
                 PrintStringOnPosition(10, 49, "TIME: " + time, ConsoleColor.White);
                 PrintStringOnPosition(50, 49, "POINTS: " + points, ConsoleColor.White);
                 PrintStringOnPosition(30, 49, "LIVES: " + lives, ConsoleColor.White);
-                //DrawLineNumbers();
                 DrawStops();
                 if (scorpion.y <= 22)
                 {
@@ -1505,9 +1368,6 @@ namespace Frogger
                 }
                 PrintScorpion(scorpion, scorpionInSecondHalf);
                 
-                //Reading name of player
-                // graphic down with scorpions = numbers of lifes left
-                //exception handling
                 //~sound effects
 
                 Console.ForegroundColor = ConsoleColor.White;
@@ -1543,8 +1403,143 @@ namespace Frogger
             } 
             #endregion
 
-            // ask for name of player, then print his point in the table?
-            
+            // ASK FOR   NAME AND PRINT POINTS
+            PrintStringOnPosition(width / 2 - 10, 43, "G A M E  O V E R !!", ConsoleColor.Red);
+            PrintStringOnPosition(10, 45, "Enter your name: ", ConsoleColor.Red);
+            string name = string.Empty;
+            try
+            {
+                name = Console.ReadLine();
+                if (name == string.Empty)
+                {
+                    name = "Alien";
+                    throw new ArgumentNullException();
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("Invalid name");
+            }
+            PrintStringOnPosition(7, 46, "", ConsoleColor.Red);
+            finalPoints = points + ((1000 % (1000 - time)) - 1);
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
+            {
+                file.WriteLine("{0} {1}", finalPoints.ToString().PadRight(8), name);
+            }
+
+            #region show klasirane
+            try
+            {
+                Console.Clear();
+                PrintName();
+                Console.SetCursorPosition((width / 2) - 10, 10);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("- HIGH SCORES -\n");
+
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                List<string> playerName = new List<string>();
+                using (StreamReader reader = new StreamReader(@"..\..\HighScores.txt"))
+                {
+                    string line = reader.ReadLine();
+                    while (line != null)
+                    {
+                        playerName.Add(line); //Add name and score to the list
+                        line = reader.ReadLine();
+                    }
+                }
+                string[] playersArr = playerName.ToArray();
+                Array.Sort(playersArr, new AlphanumComparatorFast());
+                while (playerName.Count > 10)
+                {
+                    playerName.RemoveAt(playerName.Count - 1);
+                }
+
+                //string newEntry = points + "\t" + nameOfPlayer;
+                //playerName.Add(newEntry);
+                int counter = 0;
+                for (int i = playersArr.Length - 1, j = 0; i >= playersArr.Length - 13; i--, j++)
+                {
+                    Console.SetCursorPosition((width / 2) - 10, 12 + j);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    playerName = playersArr.ToList();
+                    Console.WriteLine(playersArr[i]);
+                }
+                using (var writer = new StreamWriter(@"..\..\HighScores.txt"))
+                {
+                    for (int i = playersArr.Length - 1; i >= 0; i--)
+                    {
+                        writer.WriteLine(playerName[i]); //Writes name and score supposedly
+                    }
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                Console.Error.WriteLine("\tCannot find 'HighScores.txt'.");
+            }
+
+            #region menu - return/quit
+            while (true)
+            {
+                for (int i = 0; i < secMenuItems.Length; i++)
+                {
+                    if (secondChoice == i)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                    }
+                    Console.SetCursorPosition(25 + (10 * i), 27);
+                    Console.WriteLine(secMenuItems[i]);
+                    //Console.ResetColor();
+                }
+                if (Console.KeyAvailable)
+                {
+                    for (int i = 0; i < secMenuItems.Length; i++)
+                    {
+                        if (secondChoice == i)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                        }
+                        Console.SetCursorPosition(25 + (10 * i), 27);
+                        Console.WriteLine(secMenuItems[i]);
+                        //Console.ResetColor();
+                    }
+
+                    ConsoleKeyInfo pressedKey = Console.ReadKey();
+                    if (pressedKey.Key == ConsoleKey.LeftArrow)
+                    {
+                        secondChoice = (secondChoice - 1 + 2) % 2;
+                    }
+                    if (pressedKey.Key == ConsoleKey.RightArrow)
+                    {
+                        secondChoice = (secondChoice + 1) % 2;
+                    }
+                    if (pressedKey.Key == ConsoleKey.Enter)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (secondChoice == 0)
+            {
+                var fileName = Assembly.GetExecutingAssembly().Location;
+                System.Diagnostics.Process.Start(fileName);
+
+                Environment.Exit(0);
+            }
+            else if (secondChoice == 1)
+            {
+                return;
+            }
+            #endregion
+            #endregion
         }
 
         private static void DrawStops()
