@@ -2406,6 +2406,7 @@ namespace Frogger
                 tempCoord.y = scorpion.y - step;
                 scorpion = tempCoord;
                 points += 10;
+                Console.Beep();
             }
         }
         private static void MoveScorpionDown()
@@ -2424,6 +2425,7 @@ namespace Frogger
                 tempCoord.ch = scorpion.ch;
                 tempCoord.y = scorpion.y + step;
                 scorpion = tempCoord;
+                Console.Beep();
             }
             
             //scorpion.y = scorpion.y + 1;
@@ -2439,6 +2441,7 @@ namespace Frogger
                 tempCoord.ch = scorpion.ch;
                 tempCoord.y = scorpion.y;
                 scorpion = tempCoord;
+                Console.Beep();
             }
             
             //scorpion.x = scorpion.x - 1;
@@ -2455,6 +2458,7 @@ namespace Frogger
                 tempCoord.y = scorpion.y;
                 scorpion = tempCoord;
                 scorpion.x = scorpion.x + 1;
+                Console.Beep();
             }
            
         }
