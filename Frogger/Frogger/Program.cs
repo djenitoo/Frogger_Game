@@ -12,13 +12,15 @@ namespace Frogger
     class Program
     {
         #region Global values
+        static int finalPoints = 0;
+        static int lives = 5;
         static int width = 69;
         static int height = 55;
         static bool scorpionInSecondHalf = false;
         static bool quitGame = false;
         static bool[] slotsAreEmpty = { true, true, true, true };
         static int points = 0;
-        static int time = 0;
+        static int time = 500;
         static int y = 25;
         //static bool isPartOfObj = false;
         static int lineOfInterest = 0;
@@ -250,18 +252,21 @@ namespace Frogger
                         //    line = readHighScores.ReadLine();
                         //}
                     }
+                    string[] playersArr = playerName.ToArray();
+                    Array.Sort(playersArr, new AlphanumComparatorFast());
                     while (playerName.Count > 10)
                     {
                         playerName.RemoveAt(playerName.Count - 1);
                     }
+
                     string newEntry = points + "\t" + nameOfPlayer;
                     playerName.Add(newEntry);
-                    string[] playersArr = playerName.ToArray();
-                    Array.Sort(playersArr, new AlphanumComparatorFast());
-                    for (int i = playersArr.Length - 1, j = 0; i >= 0; i--, j++)
+                    int counter = 0;
+                    for (int i = playersArr.Length - 1, j = 0; i >= playersArr.Length - 13; i--, j++)
                     {
                         Console.SetCursorPosition((width / 2) - 10, 12 + j);
                         Console.ForegroundColor = ConsoleColor.Cyan;
+                        playerName = playersArr.ToList();
                         Console.WriteLine(playersArr[i]);
                     }
                     using (var writer = new StreamWriter(@"..\..\HighScores.txt"))
@@ -298,13 +303,10 @@ namespace Frogger
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\t\tARRIVED HOME SAFELY\n");
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\t\t1000 PTS FOR SAVING SCOTPIONS");
+                Console.WriteLine("\t\t1000 PTS FOR SAVING ALL SCORPIONS");
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\t\tINTO FIVE HOMES\n");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\t\tPLUS BONUS");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\t\t10 PTS X REMAINING SECOND\n\n");
+                Console.WriteLine("\t\tAND RETURN THEM TO THEIR BELOVED HOME\n");
+                
 
                 secondChoiseOfMenus();
             }
@@ -501,6 +503,35 @@ namespace Frogger
                         Thread.Sleep(500);
                         SetInitialPositionOfScorpion();
                         PrintScorpion(scorpion, scorpionInSecondHalf);
+
+                        // lives reduction & chech for time > 0
+                        lives--;
+                        if (lives <= 0)
+                        {
+                            PrintStringOnPosition(5, 45, "GAME OVER!!!", ConsoleColor.Red);
+                            PrintStringOnPosition(5, 50, "Enter your name: ", ConsoleColor.Red);
+                            string name = string.Empty;
+                            try
+                            {
+                                name = Console.ReadLine();
+                                if (name == string.Empty)
+                                {
+                                    name = "Alien";
+                                    throw new ArgumentNullException();
+                                }
+                            }
+                            catch (ArgumentNullException)
+                            {
+                                Console.WriteLine("Invalid name");
+                            }
+                            PrintStringOnPosition(7, 51, "", ConsoleColor.Red);
+                            finalPoints = points + (1000 % (1000 - time) - 1);
+                            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
+                            {
+                                file.WriteLine("{0}{1} ", finalPoints.ToString().PadRight(8), name);
+                            }
+                            Environment.Exit(0);
+                        }
                     }
                 }
             }
@@ -557,6 +588,35 @@ namespace Frogger
                         Thread.Sleep(500);
                         SetInitialPositionOfScorpion();
                         PrintScorpion(scorpion, scorpionInSecondHalf);
+
+                        // lives reduction & chech for time > 0
+                        lives--;
+                        if (lives <= 0)
+                        {
+                            PrintStringOnPosition(5, 45, "GAME OVER!!!", ConsoleColor.Red);
+                            PrintStringOnPosition(5, 50, "Enter your name: ", ConsoleColor.Red);
+                            string name = string.Empty;
+                            try
+                            {
+                                name = Console.ReadLine();
+                                if (name == string.Empty)
+                                {
+                                    name = "Alien";
+                                    throw new ArgumentNullException();
+                                }
+                            }
+                            catch (ArgumentNullException)
+                            {
+                                Console.WriteLine("Invalid name");
+                            }
+                            PrintStringOnPosition(7, 51, "", ConsoleColor.Red);
+                            finalPoints = points + (1000 % (1000 - time) - 1);
+                            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
+                            {
+                                file.WriteLine("{0}{1} ", finalPoints.ToString().PadRight(8), name);
+                            }
+                            Environment.Exit(0);
+                        }
                     }
                     else
                     {
@@ -657,6 +717,35 @@ namespace Frogger
                             Thread.Sleep(500);
                             SetInitialPositionOfScorpion();
                             PrintScorpion(scorpion, scorpionInSecondHalf);
+
+                            // lives reduction & chech for time > 0
+                            lives--;
+                            if (lives <= 0)
+                            {
+                                PrintStringOnPosition(5, 45, "GAME OVER!!!", ConsoleColor.Red);
+                                PrintStringOnPosition(5, 50, "Enter your name: ", ConsoleColor.Red);
+                                string name = string.Empty;
+                                try
+                                {
+                                    name = Console.ReadLine();
+                                    if (name == string.Empty)
+                                    {
+                                        name = "Alien";
+                                        throw new ArgumentNullException();
+                                    }
+                                }
+                                catch (ArgumentNullException)
+                                {
+                                    Console.WriteLine("Invalid name");
+                                }
+                                PrintStringOnPosition(7, 51, "", ConsoleColor.Red);
+                                finalPoints = points + (1000 % (1000 - time) - 1);
+                                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
+                                {
+                                    file.WriteLine("{0}{1} ", finalPoints.ToString().PadRight(8), name);
+                                }
+                                Environment.Exit(0);
+                            }
                         }
                         else if (isTreeOrTurtle && (scorpion.y == coordY) &&
                                 (scorpion.x == coordX && scorpion.x + 2 <= x + ch.GetLength(1)))
@@ -669,12 +758,15 @@ namespace Frogger
                                 Thread.Sleep(500);
                                 SetInitialPositionOfScorpion();
                                 PrintScorpion(scorpion, scorpionInSecondHalf);
+
+                                
                             }
                             //else
                             //{
                             //    PrintScorpion(scorpion, scorpionInSecondHalf);
                             //    isPartOfObj = true;
                             //}
+
                         }
                         if (isTreeOrTurtle && scorpion.y == coordY)
                         {
@@ -712,10 +804,40 @@ namespace Frogger
                             Thread.Sleep(500);
                             SetInitialPositionOfScorpion();
                             PrintScorpion(scorpion, scorpionInSecondHalf);
+
+                            //lives reduction
+                            lives--;
+                            if (lives <= 0)
+                            {
+                                PrintStringOnPosition(5, 45, "GAME OVER!!!", ConsoleColor.Red);
+                                PrintStringOnPosition(5, 50, "Enter your name: ", ConsoleColor.Red);
+                                string name = string.Empty;
+                                try
+                                {
+                                    name = Console.ReadLine();
+                                    if (name == string.Empty)
+                                    {
+                                        name = "Alien";
+                                        throw new ArgumentNullException();
+                                    }
+                                }
+                                catch (ArgumentNullException)
+                                {
+                                    Console.WriteLine("Invalid name");
+                                }
+                                PrintStringOnPosition(7, 51, "", ConsoleColor.Red);
+                                finalPoints = points + (1000 % (1000 - time) - 1);
+                                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
+                                {
+                                    file.WriteLine("{0}{1}", finalPoints.ToString().PadRight(8), name);
+                                }
+                                Environment.Exit(0);
+                            }
                         }
                         else if (isTreeOrTurtle && (scorpion.y == coordY || scorpion.y + 1 == coordY) &&
                                 (scorpion.x == coordX && scorpion.x + 2 <= x + ch.GetLength(1)))
                         {
+                            
                             //scorpion.x = coordX - speed;
                             lineOfInterest = coordX - speed;
                             if (lineOfInterest < 0 || lineOfInterest + 2 >= width)
@@ -725,12 +847,15 @@ namespace Frogger
                                 Thread.Sleep(500);
                                 SetInitialPositionOfScorpion();
                                 PrintScorpion(scorpion, scorpionInSecondHalf);
+
+                                
                             }
                             //else
                             //{
                             //    PrintScorpion(scorpion, scorpionInSecondHalf);
                             //    //isPartOfObj = true;
                             //}
+                            
                         }
 
                         if (isTreeOrTurtle && scorpion.y == coordY)
@@ -1159,7 +1284,34 @@ namespace Frogger
            //Main game
             while (true)
             {
-                
+                //time reduction & time check for less than 0
+                time--;
+                if (time <= 0)
+                {
+                    PrintStringOnPosition(5, 45, "GAME OVER!!!", ConsoleColor.Red);
+                    PrintStringOnPosition(5, 50, "Enter your name: ", ConsoleColor.Red);
+                    string name = string.Empty;
+                    try
+                    {
+                        name = Console.ReadLine();
+                        if (name == string.Empty)
+                        {
+                            name = "Alien";
+                            throw new ArgumentNullException();
+                        }
+                    }
+                    catch (ArgumentNullException)
+                    {
+                        Console.WriteLine("Invalid name");
+                    }
+                    PrintStringOnPosition(7, 51, "", ConsoleColor.Red);
+                    finalPoints = points + ((1000 % (1000 - time)) - 1);
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
+                    {
+                        file.WriteLine("{0}{1}", finalPoints.ToString().PadRight(8), name);
+                    }
+                    Environment.Exit(0);
+                }
                 #region KeyReading
                 if (Console.KeyAvailable)
                 {
@@ -1234,7 +1386,9 @@ namespace Frogger
                 }
 
                 Console.Clear();
-                
+                PrintStringOnPosition(10, 54, "TIME: " + time, ConsoleColor.White);
+                PrintStringOnPosition(50, 54, "POINTS: " + points, ConsoleColor.White);
+                PrintStringOnPosition(30, 54, "LIVES: " + lives, ConsoleColor.White);
                 //DrawLineNumbers();
                 DrawStops();
                 if (scorpion.y <= 22)
@@ -1433,7 +1587,7 @@ namespace Frogger
                 Console.WriteLine(i);
             }
         }
-
+       
         private static void SetInitialPositionOfScorpion()
         {
             scorpion = new Forms();
@@ -1457,28 +1611,87 @@ namespace Frogger
                     isDead = true;
                     scorpion.ch = deadForm;
                     scorpion.color = ConsoleColor.Red;
+
+                    lives--;
+                    if (lives <= 0)
+                    {
+                        PrintStringOnPosition(5, 45, "GAME OVER!!!", ConsoleColor.Red);
+                        PrintStringOnPosition(5, 50, "Enter your name: ", ConsoleColor.Red);
+                        string name = string.Empty;
+                        try
+                        {
+                            name = Console.ReadLine();
+                            if (name == string.Empty)
+                            {
+                                name = "Alien";
+                                throw new ArgumentNullException();
+                            }
+                        }
+                        catch (ArgumentNullException)
+                        {
+                            Console.WriteLine("Invalid name");
+                        }
+                        PrintStringOnPosition(7, 51, "", ConsoleColor.Red);
+                        finalPoints = points + (1000 % (1000 - time) - 1);
+                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
+                        {
+                            file.WriteLine("{0}{1} ", finalPoints.ToString().PadRight(8), name);
+                        }
+                        Environment.Exit(0);
+                    }
                 }
                 else
                 {
                     if ((scorpion.x > 10 && scorpion.x < 15) && slotsAreEmpty[0] == true)
                     {
                         slotsAreEmpty[0] = false;
+                        points += 50;
 
                     }
                     else if ((scorpion.x > 25 && scorpion.x < 30) && slotsAreEmpty[1] == true)
                     {
                         slotsAreEmpty[1] = false;
+                        points += 50;
                     }
                     else if ((scorpion.x > 40 && scorpion.x < 45) && slotsAreEmpty[2] == true)
                     {
                         slotsAreEmpty[2] = false;
+                        points += 50;
                     }
                     else if ((scorpion.x > 55 && scorpion.x < 60) && slotsAreEmpty[3] == true)
                     {
                         slotsAreEmpty[3] = false;
+                        points += 50;
                     }
 
                     SetInitialPositionOfScorpion();
+                }
+                if( slotsAreEmpty[3] == false &&  slotsAreEmpty[2] == false &&  slotsAreEmpty[1] == false  && slotsAreEmpty[0] == false)
+                {
+                    points += 1000;
+                    PrintStringOnPosition(5, 45, "YOU WON!!!", ConsoleColor.Red);
+                    PrintStringOnPosition(5, 50, "Enter your name: ", ConsoleColor.Red);
+                    string name = string.Empty;
+                    try
+                    {
+                        name = Console.ReadLine();
+                        if (name == string.Empty)
+                        {
+                            name = "Alien";
+                            throw new ArgumentNullException();
+                        }
+                    }
+                    catch (ArgumentNullException)
+                    {
+                        Console.WriteLine("Invalid name");
+                    }
+                    PrintStringOnPosition(7, 51, "", ConsoleColor.Red);
+                    finalPoints = points + (1000 % (1000 - time) - 1);
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
+                    {
+                        file.WriteLine("{0}{1} ", finalPoints.ToString().PadRight(8), name);
+                    }
+                    Environment.Exit(0);
                 }
             }
             char[,] ch = scorpion.ch;
@@ -1534,7 +1747,7 @@ namespace Frogger
                 tempCoord.ch = scorpion.ch;
                 tempCoord.y = scorpion.y - step;
                 scorpion = tempCoord;
-                Console.Beep();
+                points += 10;
             }
         }
         private static void MoveScorpionDown()
@@ -1553,13 +1766,10 @@ namespace Frogger
                 tempCoord.ch = scorpion.ch;
                 tempCoord.y = scorpion.y + step;
                 scorpion = tempCoord;
-                Console.Beep();
             }
             
             //scorpion.y = scorpion.y + 1;
         }
-      
-
         private static void MoveScorpionLeft()
         {
             if (scorpion.x > 2)
@@ -1571,7 +1781,6 @@ namespace Frogger
                 tempCoord.ch = scorpion.ch;
                 tempCoord.y = scorpion.y;
                 scorpion = tempCoord;
-                Console.Beep();
             }
             
             //scorpion.x = scorpion.x - 1;
@@ -1588,7 +1797,6 @@ namespace Frogger
                 tempCoord.y = scorpion.y;
                 scorpion = tempCoord;
                 scorpion.x = scorpion.x + 1;
-                Console.Beep();
             }
            
         }
