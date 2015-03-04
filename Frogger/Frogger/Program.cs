@@ -499,7 +499,7 @@ namespace Frogger
                                 name = Console.ReadLine();
                                 if (name == string.Empty)
                                 {
-                                    name = "Alien";
+                                    name = "Guest";
                                     throw new ArgumentNullException();
                                 }
                             }
@@ -697,7 +697,7 @@ namespace Frogger
                                 name = Console.ReadLine();
                                 if (name == string.Empty)
                                 {
-                                    name = "Alien";
+                                    name = "Guest";
                                     throw new ArgumentNullException();
                                 }
                             }
@@ -939,7 +939,7 @@ namespace Frogger
                                     name = Console.ReadLine();
                                     if (name == string.Empty)
                                     {
-                                        name = "Alien";
+                                        name = "Guest";
                                         throw new ArgumentNullException();
                                     }
                                 }
@@ -1139,7 +1139,7 @@ namespace Frogger
                                     name = Console.ReadLine();
                                     if (name == string.Empty)
                                     {
-                                        name = "Alien";
+                                        name = "Guest";
                                         throw new ArgumentNullException();
                                     }
                                 }
@@ -1864,7 +1864,7 @@ namespace Frogger
                 name = Console.ReadLine();
                 if (name == string.Empty)
                 {
-                    name = "Alien";
+                    name = "Guest";
                     throw new ArgumentNullException();
                 }
             }
@@ -2168,7 +2168,7 @@ namespace Frogger
                             name = Console.ReadLine();
                             if (name == string.Empty)
                             {
-                                name = "Alien";
+                                name = "Guest";
                                 throw new ArgumentNullException();
                             }
                         }
@@ -2327,15 +2327,15 @@ namespace Frogger
                 if( slotsAreEmpty[3] == false &&  slotsAreEmpty[2] == false &&  slotsAreEmpty[1] == false  && slotsAreEmpty[0] == false)
                 {
                     points += 1000;
-                    PrintStringOnPosition(5, 45, "YOU WON!!!", ConsoleColor.Red);
-                    PrintStringOnPosition(5, 50, "Enter your name: ", ConsoleColor.Red);
+                    PrintStringOnPosition(width / 2 - 10, 43, "Y O U  W O N !!", ConsoleColor.Red);
+                    PrintStringOnPosition(10, 45, "Enter your name: ", ConsoleColor.Red);
                     string name = string.Empty;
                     try
                     {
                         name = Console.ReadLine();
                         if (name == string.Empty)
                         {
-                            name = "Alien";
+                            name = "Guest";
                             throw new ArgumentNullException();
                         }
                     }
@@ -2343,13 +2343,126 @@ namespace Frogger
                     {
                         Console.WriteLine("Invalid name");
                     }
-                    PrintStringOnPosition(7, 51, "", ConsoleColor.Red);
-                    finalPoints = points + (1000 % (1000 - time) - 1);
+                    PrintStringOnPosition(7, 46, "", ConsoleColor.Red);
+                    finalPoints = points + ((1000 % (1000 - time)) - 1);
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"..\..\HighScores.txt", true))
                     {
-                        file.WriteLine("{0}{1} ", finalPoints.ToString().PadRight(8), name);
+                        file.WriteLine("{0} {1}", finalPoints.ToString().PadRight(8), name);
                     }
-                    Environment.Exit(0);
+
+                    #region show klasirane
+                    try
+                    {
+                        Console.Clear();
+                        PrintName();
+                        Console.SetCursorPosition((width / 2) - 10, 10);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("- HIGH SCORES -\n");
+
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        List<string> playerName = new List<string>();
+                        using (StreamReader reader = new StreamReader(@"..\..\HighScores.txt"))
+                        {
+                            string line = reader.ReadLine();
+                            while (line != null)
+                            {
+                                playerName.Add(line); //Add name and score to the list
+                                line = reader.ReadLine();
+                            }
+                        }
+                        string[] playersArr = playerName.ToArray();
+                        Array.Sort(playersArr, new AlphanumComparatorFast());
+                        while (playerName.Count > 10)
+                        {
+                            playerName.RemoveAt(playerName.Count - 1);
+                        }
+
+                        //string newEntry = points + "\t" + nameOfPlayer;
+                        //playerName.Add(newEntry);
+                        int counter = 0;
+                        for (int h = playersArr.Length - 1, g = 0; h >= playersArr.Length - 13; h--, g++)
+                        {
+                            Console.SetCursorPosition((width / 2) - 10, 12 + g);
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            playerName = playersArr.ToList();
+                            Console.WriteLine(playersArr[h]);
+                        }
+                        using (var writer = new StreamWriter(@"..\..\HighScores.txt"))
+                        {
+                            for (int h = playersArr.Length - 1; h >= 0; h--)
+                            {
+                                writer.WriteLine(playerName[h]); //Writes name and score supposedly
+                            }
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Console.Error.WriteLine("\tCannot find 'HighScores.txt'.");
+                    }
+
+                    #region menu - return/quit
+                    while (true)
+                    {
+                        for (int n = 0; n < secMenuItems.Length; n++)
+                        {
+                            if (secondChoice == n)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                            }
+                            Console.SetCursorPosition(25 + (10 * n), 27);
+                            Console.WriteLine(secMenuItems[n]);
+                            //Console.ResetColor();
+                        }
+                        if (Console.KeyAvailable)
+                        {
+                            for (int r = 0; r < secMenuItems.Length; r++)
+                            {
+                                if (secondChoice == r)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Gray;
+                                }
+                                Console.SetCursorPosition(25 + (10 * r), 27);
+                                Console.WriteLine(secMenuItems[r]);
+                                //Console.ResetColor();
+                            }
+
+                            ConsoleKeyInfo pressedKey = Console.ReadKey();
+                            if (pressedKey.Key == ConsoleKey.LeftArrow)
+                            {
+                                secondChoice = (secondChoice - 1 + 2) % 2;
+                            }
+                            if (pressedKey.Key == ConsoleKey.RightArrow)
+                            {
+                                secondChoice = (secondChoice + 1) % 2;
+                            }
+                            if (pressedKey.Key == ConsoleKey.Enter)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (secondChoice == 0)
+                    {
+                        var fileName = Assembly.GetExecutingAssembly().Location;
+                        System.Diagnostics.Process.Start(fileName);
+
+                        Environment.Exit(0);
+                    }
+                    else if (secondChoice == 1)
+                    {
+                        return;
+                    }
+                    #endregion
+                    #endregion
                 }
             }
             char[,] ch = scorpion.ch;
@@ -2425,6 +2538,7 @@ namespace Frogger
                 tempCoord.ch = scorpion.ch;
                 tempCoord.y = scorpion.y + step;
                 scorpion = tempCoord;
+                points -= 10;
                 Console.Beep();
             }
             

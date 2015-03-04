@@ -22,3 +22,9 @@ C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\obj\Debug\Fro
 C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.exe
 C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.pdb
 C:\Users\иван\Desktop\Frogger C#2\Frogger_Game\Frogger\Frogger\obj\Debug\Frogger.csprojResolveAssemblyReference.cache
+E:\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.exe.config
+E:\Frogger_Game\Frogger\Frogger\obj\Debug\Frogger.exe
+E:\Frogger_Game\Frogger\Frogger\obj\Debug\Frogger.pdb
+E:\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.exe
+E:\Frogger_Game\Frogger\Frogger\bin\Debug\Frogger.pdb
+E:\Frogger_Game\Frogger\Frogger\obj\Debug\Frogger.csprojResolveAssemblyReference.cache
