@@ -583,9 +583,9 @@ namespace Frogger
                                 }
                                 if (Console.KeyAvailable)
                                 {
-                                    for (int r = 0; i < secMenuItems.Length; i++)
+                                    for (int r = 0; r < secMenuItems.Length; r++)
                                     {
-                                        if (secondChoice == i)
+                                        if (secondChoice == r)
                                         {
                                             Console.ForegroundColor = ConsoleColor.Red;
                                         }
@@ -593,8 +593,8 @@ namespace Frogger
                                         {
                                             Console.ForegroundColor = ConsoleColor.Gray;
                                         }
-                                        Console.SetCursorPosition(25 + (10 * i), 27);
-                                        Console.WriteLine(secMenuItems[i]);
+                                        Console.SetCursorPosition(25 + (10 * r), 27);
+                                        Console.WriteLine(secMenuItems[r]);
                                         //Console.ResetColor();
                                     }
 
@@ -781,9 +781,9 @@ namespace Frogger
                                 }
                                 if (Console.KeyAvailable)
                                 {
-                                    for (int r = 0; i < secMenuItems.Length; i++)
+                                    for (int r = 0; r < secMenuItems.Length; r++)
                                     {
-                                        if (secondChoice == i)
+                                        if (secondChoice == r)
                                         {
                                             Console.ForegroundColor = ConsoleColor.Red;
                                         }
@@ -791,8 +791,8 @@ namespace Frogger
                                         {
                                             Console.ForegroundColor = ConsoleColor.Gray;
                                         }
-                                        Console.SetCursorPosition(25 + (10 * i), 27);
-                                        Console.WriteLine(secMenuItems[i]);
+                                        Console.SetCursorPosition(25 + (10 * r), 27);
+                                        Console.WriteLine(secMenuItems[r]);
                                         //Console.ResetColor();
                                     }
 
@@ -1023,9 +1023,9 @@ namespace Frogger
                                     }
                                     if (Console.KeyAvailable)
                                     {
-                                        for (int r = 0; i < secMenuItems.Length; i++)
+                                        for (int r = 0; r < secMenuItems.Length; r++)
                                         {
-                                            if (secondChoice == i)
+                                            if (secondChoice == r)
                                             {
                                                 Console.ForegroundColor = ConsoleColor.Red;
                                             }
@@ -1033,8 +1033,8 @@ namespace Frogger
                                             {
                                                 Console.ForegroundColor = ConsoleColor.Gray;
                                             }
-                                            Console.SetCursorPosition(25 + (10 * i), 27);
-                                            Console.WriteLine(secMenuItems[i]);
+                                            Console.SetCursorPosition(25 + (10 * r), 27);
+                                            Console.WriteLine(secMenuItems[r]);
                                             //Console.ResetColor();
                                         }
 
@@ -1223,9 +1223,9 @@ namespace Frogger
                                     }
                                     if (Console.KeyAvailable)
                                     {
-                                        for (int r = 0; i < secMenuItems.Length; i++)
+                                        for (int r = 0; r < secMenuItems.Length; r++)
                                         {
-                                            if (secondChoice == i)
+                                            if (secondChoice == r)
                                             {
                                                 Console.ForegroundColor = ConsoleColor.Red;
                                             }
@@ -1233,8 +1233,8 @@ namespace Frogger
                                             {
                                                 Console.ForegroundColor = ConsoleColor.Gray;
                                             }
-                                            Console.SetCursorPosition(25 + (10 * i), 27);
-                                            Console.WriteLine(secMenuItems[i]);
+                                            Console.SetCursorPosition(25 + (10 * r), 27);
+                                            Console.WriteLine(secMenuItems[r]);
                                             //Console.ResetColor();
                                         }
 
